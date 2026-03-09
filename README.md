@@ -1,4 +1,6 @@
-# On Windows
+
+# Running the virtual plant
+## On Windows
 
 1. Create a virtual environment:
 
