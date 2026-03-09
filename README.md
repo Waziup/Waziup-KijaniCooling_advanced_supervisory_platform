@@ -28,12 +28,12 @@ cd Virtual_plant
 python virtual_plant.py
 ```
 
-6. Start a client (such as a PC or WaziGate) to receive data from the virtual plant with the command:
+6. Start a client (on a PC or WaziGate) to receive data from the virtual plant with the command:
 ```
 python virtual_client.py
 ```
 
-6. To easily visualize the simulated data you can run the client as a Flask application. First navigate to the flask application directory with the command:
+6. To easily visualize the simulated data you can also run the client as a Flask application. First navigate to the flask application directory with the command:
 ```
 cd flask_app
 ```
