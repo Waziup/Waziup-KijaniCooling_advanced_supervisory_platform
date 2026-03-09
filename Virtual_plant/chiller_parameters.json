@@ -1,0 +1,45 @@
+{
+    "flow_rates": {
+        "signals": [
+            "VG1",
+            "VH1",
+            "VC1",
+            "VC2"
+        ],
+        "type": "numerical"
+    },
+    "pressures": {
+        "signals": [
+            "PC1",
+            "PG1"
+        ],
+        "type": "numerical"
+    },
+    "temperatures": {
+        "signals": [
+            "TG1",
+            "TH1",
+            "Th2",
+            "Th3",
+            "Th4",
+            "TC1",
+            "TC2",
+            "TC3",
+            "TC4",
+            "TC5",
+            "TC6",
+            "TC7",
+            "TC8",
+            "TC9"
+        ],
+        "type": "numerical"
+    },
+    "circulator_pumps_control": {
+        "signals": [
+            "CH1",
+            "CC1",
+            "CC2"
+        ],
+        "type": "numerical"
+    }
+}

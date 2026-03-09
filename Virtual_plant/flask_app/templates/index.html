@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>KijaniBox virtual plant</title>
+    <style>
+        body {
+            font-family: 'Poppins';
+            color: #519C49;
+            background-color: #ffffff;
+            padding: 20px;
+        }
+        .system {
+            display: grid;
+            grid-template-columns: repeat(5, 200px);
+            grid-gap: 20px;
+            align-items: start;
+        }
+
+        .block {
+            position: relative;
+            border: 2px solid #F8D813;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            min-height: 100px;
+        }
+
+        .block h3 {
+            margin: 0 0 10px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .value {
+            font-size: 14px;
+            margin: 4px 0;
+        }
+
+        h1 {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+
+<h1>KijaniBox: virtual biodigester plant</h1>
+
+<h2>Data from virtual chiller</h2>
+<!-- Add photo of general scheme of signals to be monitored, schematic from Lorenzo -->
+<div class="system">
+
+    <div class="block">
+        <h3>Digester to ABS chiller</h3>
+        <div class="value" id="th1">th1: </div>
+        <div class="value" id="th2">th2: </div>
+        <div class="value" id="th3">th3: </div>
+        <div class="value" id="th4">th4: </div>
+        <div class="value" id="vh1">vh1: </div>
+
+        <div class="value" id="ch1">ch1: </div>
+
+        <div class="value" id="tg1">tg1: </div>
+        <div class="value" id="vg1">vg1: </div>
+        <div class="value" id="pg1">pg1: </div>
+    </div>
+
+    <div class="block">
+        <h3>ABS Chiller to Brine Storage</h3>
+        <div class="value" id="tc1">tc1: </div>
+        <div class="value" id="tc2">tc2: </div>
+        <div class="value" id="tc3">tc3: </div>
+        <div class="value" id="tc4">tc4: </div>
+        
+        <div class="value" id="cc1">cc1: </div>   
+        <div class="value" id="vc1">vc1: </div>
+        <div class="value" id="pc1">pc1: </div>
+    </div>
+
+    <div class="block">
+        <h3>Brine Storage to Fresh Product Storage</h3>
+            <div class="value" id="tc5">tc5: </div>
+            <div class="value" id="tc6">tc6: </div>
+            <div class="value" id="tc7">tc7: </div>
+            <div class="value" id="tc8">tc8: </div>
+            <div class="value" id="tc9">tc9: </div>          
+            <div class="value" id="vc2">vc2: </div>
+
+            <div class="value" id="cc2">cc2: </div>
+        
+    </div>
+</div>
+
+<div id="last-updated" style="margin-top: 20px;">
+    Last updated just now
+</div>
+
+<script>
+    let lastUpdatedSeconds = 0;
+    let updateInterval;
+
+    async function fetchData() {
+        try {
+            const res = await fetch("/chiller_data");
+            const data = await res.json();
+
+            if (data.error) {
+                document.getElementById("last-updated").textContent = "Error fetching data: " + data.error;
+                return;
+            }
+
+            // Update each element
+            for (let key in data) {
+                const el = document.getElementById(key);
+                if (el) {
+                    el.textContent = `${key}: ${data[key]}`;
+                }
+            }
+
+            // Reset counter and update immediately
+            lastUpdatedSeconds = 0;
+            document.getElementById("last-updated").textContent = "Last updated just now";
+        } catch (err) {
+            document.getElementById("last-updated").textContent = "Fetch error: " + err;
+        }
+    }
+
+    function updateTimer() {
+        lastUpdatedSeconds++;
+        const msg = lastUpdatedSeconds === 1
+            ? "Last updated 1 second ago"
+            : `Last updated ${lastUpdatedSeconds} seconds ago`;
+        document.getElementById("last-updated").textContent = msg;
+    }
+
+    // Start fetch and timer
+    fetchData();
+    setInterval(fetchData, 4000);  // In seconds
+    setInterval(updateTimer, 1000);  // In seconds
+</script>
+
+
+</body>
+</html>
