@@ -2,7 +2,7 @@
 # Running the virtual plant
 ## On Windows
 
-1. Create a virtual environment:
+1. Create a virtual environment by running the command:
 
 ``` 
 python -m venv env 
@@ -45,3 +45,6 @@ python app.py
 Finally, open the web page with the address of the flask application.
 
 >**Note:** You can deactivate the Python environment with the command: deactivate env
+
+# License
+GPL-3.0 license??
