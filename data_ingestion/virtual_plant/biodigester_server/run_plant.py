@@ -1,14 +1,16 @@
 from . import plant_variables
-from pyModbusTCP.server import ModbusServer, DataBank
+from pyModbusTCP.server import ModbusServer
 import time
 import random
 
 # Create an instance of ModbusServer
 server = ModbusServer("127.0.0.1", 12345, no_block=True)
 
-PLANT_UPDATE_INTERVAL = 10  # in seconds
+PLANT_UPDATE_INTERVAL = 20  # in seconds
 
-def generate_chiller_data(debug_print):
+show_debug_print = False
+
+def generate_chiller_data():
     # generate random values for chiller sensor values
     plant_variables.vg1 = round(random.uniform(plant_variables.chiller_flowrate_min, plant_variables.chiller_flowrate_max), 2)
     plant_variables.vh1 = round(random.uniform(plant_variables.chiller_flowrate_min, plant_variables.chiller_flowrate_max), 2)
@@ -30,8 +32,11 @@ def generate_chiller_data(debug_print):
     plant_variables.tc7 = round(random.uniform(plant_variables.chiller_temp_min, plant_variables.chiller_temp_max), 2)
     plant_variables.tc8 = round(random.uniform(plant_variables.chiller_temp_min, plant_variables.chiller_temp_max), 2)
     plant_variables.tc9 = round(random.uniform(plant_variables.chiller_temp_min, plant_variables.chiller_temp_max), 2)
+    plant_variables.ch1 = not bool(random.getrandbits(1))
+    plant_variables.cc1 = not bool(random.getrandbits(1))
+    plant_variables.cc2 = not bool(random.getrandbits(1))
 
-    if debug_print:
+    if show_debug_print:
         print("[Chiller] Debug process values:")
         print(f"Sensor vg1 = {plant_variables.vg1}")
         print(f"Sensor vh1 = {plant_variables.vh1}")
@@ -53,6 +58,9 @@ def generate_chiller_data(debug_print):
         print(f"Sensor tc7 = {plant_variables.tc7}")
         print(f"Sensor tc8 = {plant_variables.tc8}")
         print(f"Sensor tc9 = {plant_variables.tc9}")
+        print(f"Actuator ch1 = {plant_variables.ch1}")
+        print(f"Actuator cc1 = {plant_variables.cc1}")
+        print(f"Actuator cc2 = {plant_variables.cc2}")
         print("**********************")
 
 def communicate_chiller_data():
@@ -77,27 +85,11 @@ def communicate_chiller_data():
     server.data_bank.set_input_registers(17, [plant_variables.tc7]) # register address, value
     server.data_bank.set_input_registers(18, [plant_variables.tc8]) # register address, value
     server.data_bank.set_input_registers(19, [plant_variables.tc9]) # register address, value
+    server.data_bank.set_input_registers(20, [plant_variables.ch1]) # register address, value
+    server.data_bank.set_input_registers(21, [plant_variables.cc1]) # register address, value
+    server.data_bank.set_input_registers(22, [plant_variables.cc2]) # register address, value
 
-    """
-    print("[Chiller] Chiller actuator states ")
-    # Actuators coil states are set by a client
-    new_ch1_state = server.data_bank.get_coils(1, 1)[0]   
-    print("\tValue of ch1 has changed to " + str(new_ch1_state)) if plant_variables.ch1 != new_ch1_state else None
-    plant_variables.ch1 = new_ch1_state
-
-    new_cc1_state = server.data_bank.get_coils(2, 1)[0]  
-    print("\tValue of cc1 has changed to " + str(new_cc1_state)) if plant_variables.cc1 != new_cc1_state else None
-    plant_variables.cc1 = new_cc1_state
-
-    new_cc2_state = server.data_bank.get_coils(3, 1)[0]  
-    print("\tValue of cc2 has changed to " + str(new_cc2_state)) if plant_variables.cc2 != new_cc2_state else None
-    plant_variables.cc2 = new_cc2_state
-    print("**********************")
-
-    print(f"[Raw] Coils: ch1={new_ch1_state}, cc1={new_cc1_state}, cc2={new_cc2_state}")
-    """
-
-def generate_biodigester_data(debug_print):
+def generate_biodigester_data():
     # generate random values for biogiester sensor values
     plant_variables.si_01   = not bool(random.getrandbits(1))
     plant_variables.al_01   = plant_variables.si_01
@@ -139,7 +131,7 @@ def generate_biodigester_data(debug_print):
     plant_variables.ti_15   = round(random.uniform(plant_variables.substrate_recycling_temperature_min, plant_variables.substrate_recycling_temperature_max), 2)
     plant_variables.ti_16   = round(random.uniform(plant_variables.substrate_recycling_temperature_min, plant_variables.substrate_recycling_temperature_max), 2)
 
-    if debug_print:
+    if show_debug_print:
         print("[Biodigester] Debug process values:")
         print(f"Grinder (M01) status SI_01 = {plant_variables.si_01}")
         print(f"Grinder (M01) alarm status AL_01 = {plant_variables.al_01}")
@@ -189,45 +181,45 @@ def generate_biodigester_data(debug_print):
 
 def communicate_biodigester_data():
     # Send sensor data via ModbusTCP
-    server.data_bank.set_input_registers(20, [plant_variables.si_01]) # register address, value
-    server.data_bank.set_input_registers(21, [plant_variables.al_01]) # register address, value
-    server.data_bank.set_input_registers(22, [plant_variables.wi_02]) # register address, value
-    server.data_bank.set_input_registers(23, [plant_variables.si_02]) # register address, value
-    server.data_bank.set_input_registers(24, [plant_variables.al_02]) # register address, value
-    server.data_bank.set_input_registers(25, [plant_variables.hoa_02]) # register address, value
-    server.data_bank.set_input_registers(26, [plant_variables.si_03]) # register address, value
-    server.data_bank.set_input_registers(27, [plant_variables.al_03]) # register address, value
-    server.data_bank.set_input_registers(28, [plant_variables.ki_03]) # register address, value
-    server.data_bank.set_input_registers(29, [plant_variables.li_03]) # register address, value
-    server.data_bank.set_input_registers(30, [plant_variables.fsdl_03]) # register address, value
-    server.data_bank.set_input_registers(31, [plant_variables.fsdh_03]) # register address, value
-    server.data_bank.set_input_registers(32, [plant_variables.ki_04]) # register address, value
-    server.data_bank.set_input_registers(33, [plant_variables.j_04]) # register address, value
-    server.data_bank.set_input_registers(34, [plant_variables.hoa_01]) # register address, value
-    server.data_bank.set_input_registers(35, [plant_variables.fit_04]) # register address, value
-    server.data_bank.set_input_registers(36, [plant_variables.ti_06_1]) # register address, value
-    server.data_bank.set_input_registers(37, [plant_variables.ti_06_2]) # register address, value
-    server.data_bank.set_input_registers(38, [plant_variables.ty_06]) # register address, value
-    server.data_bank.set_input_registers(39, [plant_variables.lit_06]) # register address, value
-    server.data_bank.set_input_registers(40, [plant_variables.lahh_06]) # register address, value
-    server.data_bank.set_input_registers(41, [plant_variables.lah_06]) # register address, value
-    server.data_bank.set_input_registers(42, [plant_variables.lal_06]) # register address, value
-    server.data_bank.set_input_registers(43, [plant_variables.ti_06_4]) # register address, value
-    server.data_bank.set_input_registers(44, [plant_variables.pi_06_3]) # register address, value
-    server.data_bank.set_input_registers(45, [plant_variables.pi_11]) # register address, value
-    server.data_bank.set_input_registers(46, [plant_variables.pi_14]) # register address, value
-    server.data_bank.set_input_registers(47, [plant_variables.ti_14]) # register address, value
-    server.data_bank.set_input_registers(48, [plant_variables.fit_13]) # register address, value
-    server.data_bank.set_input_registers(49, [plant_variables.si_07]) # register address, value
-    server.data_bank.set_input_registers(50, [plant_variables.al_07]) # register address, value
-    server.data_bank.set_input_registers(51, [plant_variables.hoa_07]) # register address, value
-    server.data_bank.set_input_registers(52, [plant_variables.ki_07]) # register address, value
-    server.data_bank.set_input_registers(53, [plant_variables.j_07]) # register address, value
-    server.data_bank.set_input_registers(54, [plant_variables.lsdh_07]) # register address, value
-    server.data_bank.set_input_registers(55, [plant_variables.si_06]) # register address, value
-    server.data_bank.set_input_registers(56, [plant_variables.al_06]) # register address, value
-    server.data_bank.set_input_registers(57, [plant_variables.ti_15]) # register address, value
-    server.data_bank.set_input_registers(58, [plant_variables.ti_16]) # register address, value
+    server.data_bank.set_input_registers(23, [plant_variables.si_01]) # register address, value
+    server.data_bank.set_input_registers(24, [plant_variables.al_01]) # register address, value
+    server.data_bank.set_input_registers(25, [plant_variables.wi_02]) # register address, value
+    server.data_bank.set_input_registers(26, [plant_variables.si_02]) # register address, value
+    server.data_bank.set_input_registers(27, [plant_variables.al_02]) # register address, value
+    server.data_bank.set_input_registers(28, [plant_variables.hoa_02]) # register address, value
+    server.data_bank.set_input_registers(29, [plant_variables.si_03]) # register address, value
+    server.data_bank.set_input_registers(30, [plant_variables.al_03]) # register address, value
+    server.data_bank.set_input_registers(31, [plant_variables.ki_03]) # register address, value
+    server.data_bank.set_input_registers(32, [plant_variables.li_03]) # register address, value
+    server.data_bank.set_input_registers(33, [plant_variables.fsdl_03]) # register address, value
+    server.data_bank.set_input_registers(34, [plant_variables.fsdh_03]) # register address, value
+    server.data_bank.set_input_registers(35, [plant_variables.ki_04]) # register address, value
+    server.data_bank.set_input_registers(36, [plant_variables.j_04]) # register address, value
+    server.data_bank.set_input_registers(37, [plant_variables.hoa_01]) # register address, value
+    server.data_bank.set_input_registers(38, [plant_variables.fit_04]) # register address, value
+    server.data_bank.set_input_registers(39, [plant_variables.ti_06_1]) # register address, value
+    server.data_bank.set_input_registers(40, [plant_variables.ti_06_2]) # register address, value
+    server.data_bank.set_input_registers(41, [plant_variables.ty_06]) # register address, value
+    server.data_bank.set_input_registers(42, [plant_variables.lit_06]) # register address, value
+    server.data_bank.set_input_registers(43, [plant_variables.lahh_06]) # register address, value
+    server.data_bank.set_input_registers(44, [plant_variables.lah_06]) # register address, value
+    server.data_bank.set_input_registers(45, [plant_variables.lal_06]) # register address, value
+    server.data_bank.set_input_registers(46, [plant_variables.ti_06_4]) # register address, value
+    server.data_bank.set_input_registers(47, [plant_variables.pi_06_3]) # register address, value
+    server.data_bank.set_input_registers(48, [plant_variables.pi_11]) # register address, value
+    server.data_bank.set_input_registers(49, [plant_variables.pi_14]) # register address, value
+    server.data_bank.set_input_registers(50, [plant_variables.ti_14]) # register address, value
+    server.data_bank.set_input_registers(51, [plant_variables.fit_13]) # register address, value
+    server.data_bank.set_input_registers(52, [plant_variables.si_07]) # register address, value
+    server.data_bank.set_input_registers(53, [plant_variables.al_07]) # register address, value
+    server.data_bank.set_input_registers(54, [plant_variables.hoa_07]) # register address, value
+    server.data_bank.set_input_registers(55, [plant_variables.ki_07]) # register address, value
+    server.data_bank.set_input_registers(56, [plant_variables.j_07]) # register address, value
+    server.data_bank.set_input_registers(57, [plant_variables.lsdh_07]) # register address, value
+    server.data_bank.set_input_registers(58, [plant_variables.si_06]) # register address, value
+    server.data_bank.set_input_registers(59, [plant_variables.al_06]) # register address, value
+    server.data_bank.set_input_registers(60, [plant_variables.ti_15]) # register address, value
+    server.data_bank.set_input_registers(61, [plant_variables.ti_16]) # register address, value
 
 def run_virtual_plant():
     print("[Plant connection] Starting virtual plant server...")
@@ -239,12 +231,12 @@ def run_virtual_plant():
     server.data_bank.set_coils(3, [False])  # cc2
     """
 
-    print("[Plant connection] Server is online")
+    print("[Plant connection] Virtual plant is online")
 
     next_cycle = time.time()
     while True:
-        generate_chiller_data(False) # parameter for printing generated values
-        generate_biodigester_data(False)
+        generate_chiller_data() # parameter for printing generated values
+        generate_biodigester_data()
         communicate_chiller_data()
         communicate_biodigester_data()
         

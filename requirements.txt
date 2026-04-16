@@ -1,2 +1,4 @@
 pyModbusTCP
 flask
+requests
+paho-mqtt
