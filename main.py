@@ -4,7 +4,7 @@ import time
 
 # Import modules
 from data_ingestion.virtual_plant.biodigester_server.run_plant import run_virtual_plant
-from data_ingestion.virtual_plant.edge_supervisory_client.run_client import run_supervisory_client
+from data_ingestion.edge_supervisory_client.run_client import run_supervisory_client
 from data_ingestion.wazigate.wazigate_EdgeMQTT_util import init_mqtt
 
 WAZIGATE_CONFIG_FILE = "data_ingestion/config/asb_wazigate_config.json"

@@ -2,8 +2,8 @@ from pyModbusTCP.client import ModbusClient
 import time
 import json
 import os
-from ...wazigate import wazigate_EdgeAPI_util
-from ...wazigate import wazigate_EdgeMQTT_util
+from wazigate import wazigate_EdgeAPI_util
+from wazigate import wazigate_EdgeMQTT_util
 
 client = ModbusClient(host = "127.0.0.1", port=12345)
 
