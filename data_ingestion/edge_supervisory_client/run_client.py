@@ -2,14 +2,15 @@ from pyModbusTCP.client import ModbusClient
 import time
 import json
 import os
-from wazigate import wazigate_EdgeAPI_util
-from wazigate import wazigate_EdgeMQTT_util
+
+from ..wazigate import wazigate_EdgeAPI_util
+from ..wazigate import wazigate_EdgeMQTT_util
 
 client = ModbusClient(host = "127.0.0.1", port=12345)
 
 # Navigate two directories up using ..
 base_path = os.path.dirname(os.path.abspath(__file__))
-WAZIGATE_CONFIG_FILE = os.path.join(base_path, "..", "..", "config", "asb_wazigate_config.json")
+WAZIGATE_CONFIG_FILE = os.path.join(base_path, "..", "config", "asb_wazigate_config.json")
 
 CLIENT_POLL_INTERVAL = 18  # in seconds, smaller than PLANT_UPDATE_INTERVAL
 
@@ -95,7 +96,7 @@ def check_WaziGate_devices_configuration():
         wazigate_EdgeAPI_util.create_device(biodigester_WaziGate_deviceName)
         # todo: add code to check if device creation was successful? (may be redundant as already done in wazigate_EdgeAPI_util)        
     else:
-        biodigester_WaziGate_ID = data["devices"]["KijaniBox ASB-biodigester"]["device_id"]
+        biodigester_WaziGate_ID = data["devices"][biodigester_WaziGate_deviceName]["device_id"]
         res = wazigate_EdgeAPI_util.check_with_wazigate(biodigester_WaziGate_deviceName, biodigester_WaziGate_ID, "","")
         # todo: add code to check if device check was successful? (may be redundant as already done in wazigate_EdgeAPI_util)
         if res == 200: print(f"[CLIENT] {biodigester_WaziGate_deviceName} found on WaziGate..")
@@ -106,7 +107,7 @@ def check_WaziGate_devices_configuration():
         wazigate_EdgeAPI_util.create_device(chiller_WaziGate_deviceName)
         # todo: add code to check if device creation was successful? (may be redundant as already done in wazigate_EdgeAPI_util)
     else:
-        chiller_WaziGate_ID = data["devices"]["KijaniBox ASB-chiller"]["device_id"]
+        chiller_WaziGate_ID = data["devices"][chiller_WaziGate_deviceName]["device_id"]
         res = wazigate_EdgeAPI_util.check_with_wazigate(chiller_WaziGate_deviceName, chiller_WaziGate_ID, "","")
         # todo: add code to check if device check was successful? (may be redundant as already done in wazigate_EdgeAPI_util)
         if res == 200: print(f"[CLIENT] {biodigester_WaziGate_deviceName} found on WaziGate..")

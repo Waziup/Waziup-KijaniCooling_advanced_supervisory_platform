@@ -4,8 +4,8 @@ import os
 
 show_debug_print = True
 
-#WAZIGATE_URL = "http://wazigate.local"
-WAZIGATE_URL = "http://localhost"
+#WAZIGATE_URL = "http://xxx.xxx.xxx.xx" # REPLACE WITH YOUR ACTUAL WAZIGATE IP
+WAZIGATE_URL = "http://localhost"       # Use this when running a local WaziGate-Edge server
 USERNAME = "admin"          # default
 PASSWORD = "loragateway"    # default
 BASE_PATH = os.path.dirname(os.path.abspath(__file__))
@@ -142,7 +142,6 @@ def create_sensor(device_id, name, fordevice=""):
         return 200
 
 def post_sensor_value(device_id, sensor_id, value):
-    wazigate_token = get_wazigate_token()
     token = get_wazigate_token()
     if not token: # renew token if not saved
         token = renew_wazigate_token()
@@ -163,21 +162,42 @@ def post_sensor_value(device_id, sensor_id, value):
             json = {"value": value}
         )
         if r.status_code == 200:
-            print(f"[WAZIGATE EDGE UTIL] Successfully POSTED sensor {sensor_id}, value = {value}")
+            print(f"[WAZIGATE EDGE UTIL] Successfully POSTED to sensor {sensor_id}, value = {value}")
             return 200
     elif r.status_code != 200:
         raise Exception(f"[WAZIGATE EDGE UTIL] Failed to POST sensor value, '{value}': {r.status_code} {r.text}")
     elif r.status_code == 200:
-        print(f"[WAZIGATE EDGE UTIL] Successfully POSTED sensor {sensor_id}, value = {value}")
+        print(f"[WAZIGATE EDGE UTIL] Successfully POSTED sensor to {sensor_id}, value = {value}")
         return 200
 
 def check_with_wazigate(deviceName ="", deviceID ="", sensorName ="", sensorID ="", fordevice=""):
     # 1. Check if given device is correct
     if deviceName and deviceID:
+        token = get_wazigate_token()
+        if not token: # renew token if not saved
+            token = renew_wazigate_token()
+        headers = wazigate_auth_headers(token)
         r = requests.get(
-            f"{WAZIGATE_URL}/devices/{deviceID}"
+            f"{WAZIGATE_URL}/devices/{deviceID}",
+            headers = headers
         )
-        if r.status_code == 200: # if device exists on WaziGate
+        # check if unauthorized, refresh token and retry
+        if r.status_code == 401:
+            print("[WAZIGATE EDGE UTIL] Auth token expired, refetching...")
+            token = renew_wazigate_token()
+            headers = wazigate_auth_headers(token)
+            r = requests.get(
+                f"{WAZIGATE_URL}/devices/{deviceID}",
+                headers = headers
+            )
+            if r.status_code == 200: # if device exists on WaziGate
+                device_data = r.json()
+                if device_data["name"] != deviceName: # if name does not match on WaziGate
+                    print(f"[WAZIGATE EDGE UTIL] {deviceName} not matching with device on WaziGate..")
+                    res = create_device(deviceName)
+                    return 200 if res != "" or res != 503 else 503
+                else: return 200
+        elif r.status_code == 200: # if device exists on WaziGate
             device_data = r.json()
             if device_data["name"] != deviceName: # if name does not match on WaziGate
                 print(f"[WAZIGATE EDGE UTIL] {deviceName} not matching with device on WaziGate..")
@@ -191,9 +211,30 @@ def check_with_wazigate(deviceName ="", deviceID ="", sensorName ="", sensorID =
 
     # 2. Check if given sensor is correct
     if deviceID and sensorName and sensorID and fordevice:
+        token = get_wazigate_token()
+        if not token: # renew token if not saved
+            token = renew_wazigate_token()
+        headers = wazigate_auth_headers(token)
         r = requests.get(
-            f"{WAZIGATE_URL}/devices/{deviceID}/sensors/{sensorID}"
+            f"{WAZIGATE_URL}/devices/{deviceID}/sensors/{sensorID}",
+            headers = headers
         )
+        # check if unauthorized, refresh token and retry
+        if r.status_code == 401:
+            print("[WAZIGATE EDGE UTIL] Auth token expired, refetching...")
+            token = renew_wazigate_token()
+            headers = wazigate_auth_headers(token)
+            r = requests.get(
+                f"{WAZIGATE_URL}/devices/{deviceID}/sensors/{sensorID}",
+                headers = headers
+            )
+            if r.status_code == 200: # if sensor exists on WaziGate
+                sensor_data = r.json()
+                if sensor_data["name"] != sensorName: # if name does not match on WaziGate
+                    print(f"[WAZIGATE EDGE UTIL] {sensorName} not matching with sensor name on WaziGate..")
+                    res = create_sensor(deviceID, sensorName, fordevice)
+                    return 200 if res != "" or res != 503 else 503
+                else: return 200
         if r.status_code == 200: # if sensor exists on WaziGate
             sensor_data = r.json()
             if sensor_data["name"] != sensorName: # if name does not match on WaziGate
