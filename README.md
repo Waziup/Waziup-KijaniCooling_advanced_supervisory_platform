@@ -73,6 +73,8 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
+>**Note:** FOR DEVELOPMENT MODE! If you intend to use a local WaziGate-Edge server, ensure `WAZIGATE_URL` is set to localhost. If however you want to push data to a WaziGate, set `WAZIGATE_URL` to the gateway's IP address. `WAZIGATE_URL` is defined in `data-ingestion/wazigate/wazigate_EdgeAPI_util.py`.
+
 4. Run the main Python file:
 ```
 python main.py
