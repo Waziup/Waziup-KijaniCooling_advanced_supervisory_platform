@@ -40,29 +40,47 @@ al_06       = None # boolean, discrete input coil, PLC writes
 ti_15       = None # numerical, input registers, PLC writes
 ti_16       = None # numerical, input registers, PLC writes
 
-load_cells_max                      = 50
+load_cells_max                      = 2000
 load_cells_min                      = 0
-level_sensor_max                    = 50
+level_sensor_max                    = 3
 level_sensor_min                    = 0
-substrate_flowrate_max              = 50
-substrate_flowrate_min              = 0
-substrate_temperature_max           = 50
+substrate_flowrate_max              = 0.03
+substrate_flowrate_min              = 7
+substrate_temperature_max           = 100
 substrate_temperature_min           = 0
-substrate_level_highest_max         = 50
-substrate_level_max                 = 45
+substrate_level_highest_max         = 3
+substrate_level_max                 = 2.5
 substrate_level_min                 = 0
-biogas_temperature_max              = 50
+biogas_temperature_max              = 100
 biogas_temperature_min              = 0
-biogas_pressure_max                 = 50
+biogas_pressure_max                 = 100
 biogas_pressure_min                 = 0
-biogas_output_flowrate_max          = 50
-biogas_output_flowrate_min          = 0
-substrate_recycling_temperature_max = 50
+biogas_output_flowrate_max          = 16
+biogas_output_flowrate_min          = 0.1
+substrate_recycling_temperature_max = 80
 substrate_recycling_temperature_min = 0
 timers_value_max                    = 50
 timers_value_min                    = 0
 inverters_frequency_max             = 50
 inverters_frequency_min             = 0
+"""
+Process value ranges from Giovanni (April 2026):
+
+load cells maximum weight: 0 - 500 kg per each cell (4 cells total)                                           
+level sensor maximum value: it measures hydraulic head:  up to 100 bar, but it depends on the set up (let's say 0 - 3 bar)                                    
+substrate flow rate maximum value  0,03 - 7 m3/h          
+substrate temperature maximum value  basic -40°C /  400 °C but it depends on the set up (let's say  0 - 80 °C or 0 -100°C)            
+substrate temperature minimum value basic -40°C /  400 °C but it depends on the set up (let's say  0 - 80 °C or 0 -100°C)                      
+substrate level maximum value:   it measures hydraulic head:  up to 100 bar, but it depends on the ste up (let's say 0 - 3 bar)                                               
+biogas temperature maximum value basic -40°C /  400 °C but it depends on the set up (let's say  0 - 80 °C or 0 -100°C)                                     
+biogas temperature minimum value basic -40°C /  400 °C but it depends on the set up (let's say  0 - 80 °C or 0 -100°C)                                     
+biogas pressure maximum value up to 100 bar, but it depends on the set up (let's say 0 - 50 mbar or 0 - 100 mbar)                            
+biogas pressure minimum value up to 100 bar, but it depends on the set up (let's say 0 - 50 mbar or 0 - 100 mbar)                                            
+biogas output flow rate maximum value 16 m3/h         
+biogas output flow rate minimum value 0,1 m3/h       
+substrate recycling temperature maximum value basic -40°C /  400 °C but it depends on the set up (let's say  0 - 80 °C)                             
+substrate recycling temperature minimum value basic -40°C /  400 °C but it depends on the set up (let's say  0 - 80 °C)  
+"""
 
 # Chiller parameters
 vg1         = None # numerical, input registers, PLC writes
