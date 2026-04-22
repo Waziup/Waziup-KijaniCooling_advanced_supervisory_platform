@@ -6,7 +6,7 @@ On your local PC, download and install [Node.js](https://nodejs.org/en/download/
 
 Then, get WaziGate Edge source files: XXXXXXXXXXXXXXXXXXXXXXXXXXX recursive
 ```
-git clone https://github.com/Waziup/wazigate-edge.git
+git clone --recursive https://github.com/Waziup/wazigate-edge.git
 cd wazigate-edge
 ```
 
@@ -44,6 +44,10 @@ Finally run the development with the command:
 npm run dev
 ```
 
+To view data on the WaziGate dashboard, you need to open the interface in your browser, without CORS protections. With Chrome, you can run it like that:
+```
+google-chrome --disable-site-isolation-trials --disable-web-security --user-data-dir="~/tmp"
+```
 ## Run the KijaniBox supervisory platform
 
 The following commands are run from the [Waziup-KijaniBox_advanced_supervisory_platform repository](https://github.com/Waziup/Waziup-KijaniBox_advanced_supervisory_platform).
