@@ -22,3 +22,5 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+data_ingestion/config/asb_wazigate_config.json
+data_ingestion/config/wazigate_token.txt
