@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom"; // Ensure react-router-dom is installed
 import Sidebar from "../src/components/layout/Sidebar";
 import Header from "../src/components/layout/Header";
 import Footer from "../src/components/layout/Footer";
 import { SENSOR_CONFIG } from "../src/utils/sensorMapping";
+import DeleteConfirm from "../src/components/devices/DeleteConfirm";
 
 // Helper component for the Status Badge colors
 const StatusBadge = ({ status }) => {
@@ -20,6 +22,9 @@ const StatusBadge = ({ status }) => {
 const DeviceManagement = () => {
   const [devices, setDevices] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  
+  // Modal State for Deletion
+  const [deviceToDelete, setDeviceToDelete] = useState(null);
   
   // Popover & Filter States
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -95,6 +100,14 @@ const DeviceManagement = () => {
     setDevices(tableData);
   }, []);
 
+  // Handle actual deletion
+  const handleDeleteConfirm = () => {
+    if (deviceToDelete) {
+      setDevices(prevDevices => prevDevices.filter(d => d.id !== deviceToDelete.id));
+      setDeviceToDelete(null); // Close the modal
+    }
+  };
+
   // MASTER FILTERING & SORTING
   const filteredDevices = devices
     .filter(device => {
@@ -128,7 +141,7 @@ const DeviceManagement = () => {
           <Sidebar activePage="Device Management" />
         </aside>
         
-        <main className="flex-1 overflow-y-auto bg-[#E5E7EB] pt-0 px-8 pb-8">
+        <main className="flex-1 overflow-y-auto bg-[#E5E7EB] pt-0 px-8 pb-8 relative">
           
           <div className="w-full">
             <h2 className="text-[32px] font-bold text-gray-900 mt-0 mb-1 tracking-wide">Device Management</h2>
@@ -137,7 +150,7 @@ const DeviceManagement = () => {
             {/* Action Bar */}
             <div className="flex w-full justify-between items-center gap-4 mb-4">
               
-              {/* UPDATE: Removed max-w-5xl so flex-1 can stretch it completely */}
+              {/* Search bar */}
               <div className="relative flex-1 bg-white rounded-md shadow-sm">
                 <span className="absolute inset-y-0 left-3 flex items-center text-gray-400">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
@@ -194,11 +207,11 @@ const DeviceManagement = () => {
                   )}
                 </div>
 
-                {/* Add Device Button */}
-                <button className="flex items-center gap-2 px-5 py-2 bg-[#F8D300] hover:bg-yellow-400 text-black text-[14px] font-bold rounded-md shadow-sm transition-colors">
+                {/* Add Device Button - Connected to React Router */}
+                <Link to="/add-device" className="flex items-center gap-2 px-5 py-2 bg-[#F8D300] hover:bg-yellow-400 text-black text-[14px] font-bold rounded-md shadow-sm transition-colors">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                   Add Device
-                </button>
+                </Link>
                 
               </div>
             </div>
@@ -232,7 +245,10 @@ const DeviceManagement = () => {
                             <button className="p-1.5 hover:bg-indigo-50 rounded transition-colors group">
                               <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
                             </button>
-                            <button className="p-1.5 hover:bg-red-50 rounded transition-colors group">
+                            <button 
+                              onClick={() => setDeviceToDelete(device)}
+                              className="p-1.5 hover:bg-red-50 rounded transition-colors group"
+                            >
                               <svg className="w-4 h-4 text-gray-600 group-hover:text-red-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                             </button>
                           </div>
@@ -282,6 +298,13 @@ const DeviceManagement = () => {
       </div>
 
       <footer className="flex-shrink-0"><Footer /></footer>
+
+      <DeleteConfirm 
+        device={deviceToDelete}
+        onCancel={() => setDeviceToDelete(null)}
+        onConfirm={handleDeleteConfirm}
+      />
+      
     </div>
   );
 };

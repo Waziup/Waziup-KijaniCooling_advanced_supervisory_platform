@@ -1,20 +1,20 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-// Import your pages
-import Dashboard from '../pages/dashboard.jsx'; 
-import DeviceManagement from '../pages/DeviceManagement.jsx'; // Add this line
+// 1. UPDATE THESE: Add the two dots `../` to go up one level to find the `pages` folder
+import Dashboard from '../pages/dashboard';
+import DeviceManagement from '../pages/deviceManagement';
+
+// 2. THIS STAYS THE SAME: Because `components` is already inside `src` next to App.jsx
+import AddDevice from '../src/components/devices/AddDevice'; 
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* Redirect root to dashboard (or /devices if you prefer) */}
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
-        
-        <Route path="/dashboard" element={<Dashboard />} />
-        
-        {/* Add the new route here */}
+        <Route path="/" element={<Dashboard />} />
         <Route path="/devices" element={<DeviceManagement />} />
+        <Route path="/add-device" element={<AddDevice />} />
       </Routes>
     </Router>
   );
