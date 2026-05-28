@@ -74,6 +74,14 @@
                 "cc1": "",
                 "cc2": ""
             }
+        },
+        "KijaniBox ASB metrics": {
+            "device_id": "",
+            "sensors": {
+                "energy_output": "",
+                "gas_production": "",
+                "substrate_feeding_rate": ""
+            }
         }
     }
 }

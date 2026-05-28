@@ -1,3 +1,8 @@
+# BEFORE PUSHING CODE!
+- Delete data in wazigate_token.txt file
+- Copy contents from the file TEMPLATE-asb_wazigate_config.json to asb_wazigate_config.json
+
+
 # On Windows
 
 ## Install WaziGate Edge and its dependencies

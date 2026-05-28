@@ -3,8 +3,11 @@ import time
 import json
 import os
 
-from ..wazigate import wazigate_EdgeAPI_util
-from ..wazigate import wazigate_EdgeMQTT_util
+from data_ingestion.wazigate import wazigate_EdgeAPI_util
+from data_ingestion.wazigate import wazigate_EdgeMQTT_util
+from optimization.energy import energy_processor
+from optimization.logistics import gas_production_processor
+from optimization.logistics import substrate_feeding_rate_processor
 
 client = ModbusClient(host = "127.0.0.1", port=12345)
 
@@ -71,6 +74,11 @@ def run_supervisory_client():
             #wazigate_mqtt_publish_sensor_value(chiller_WaziGate_deviceName, chiller_data, data)
             wazigate_post_sensor_value(biodigester_WaziGate_deviceName, biodigester_data, data)
             wazigate_post_sensor_value(chiller_WaziGate_deviceName, chiller_data, data)
+            
+            # 3. Process biodigester optimization metrics
+            gas_production_processor.process_gas_production(biodigester_data, data)
+            substrate_feeding_rate_processor.process_substrate_feeding_rate(biodigester_data, data)
+            energy_processor.process_energy_output(chiller_data, data)
 
         except Exception as e:
             print(f"[CLIENT] Error: {e}")
@@ -86,6 +94,7 @@ def check_WaziGate_devices_configuration():
     data = load_json_file(WAZIGATE_CONFIG_FILE)
     biodigester_WaziGate_deviceName = list(data["devices"].keys())[0]
     chiller_WaziGate_deviceName = list(data["devices"].keys())[1]
+    metrics_WaziGate_deviceName = list(data["devices"].keys())[2]
 
     # For each device in config file, check if the ID field is not empty 
     # and further check if the device ID exists on WaziGate and if the device name matches as in config (helper function)
@@ -110,12 +119,24 @@ def check_WaziGate_devices_configuration():
         chiller_WaziGate_ID = data["devices"][chiller_WaziGate_deviceName]["device_id"]
         res = wazigate_EdgeAPI_util.check_with_wazigate(chiller_WaziGate_deviceName, chiller_WaziGate_ID, "","")
         # todo: add code to check if device check was successful? (may be redundant as already done in wazigate_EdgeAPI_util)
-        if res == 200: print(f"[CLIENT] {biodigester_WaziGate_deviceName} found on WaziGate..")
+        if res == 200: print(f"[CLIENT] {chiller_WaziGate_deviceName} found on WaziGate..")
+
+    # 3. Check metrics device
+    if not data.get('devices', {}).get(metrics_WaziGate_deviceName, {}).get("device_id"): # If device does not exist, create one on WaziGate
+        print(f"[CLIENT] The {metrics_WaziGate_deviceName} key is empty or does not exist in {WAZIGATE_CONFIG_FILE}")
+        wazigate_EdgeAPI_util.create_device(metrics_WaziGate_deviceName)
+        # todo: add code to check if device creation was successful? (may be redundant as already done in wazigate_EdgeAPI_util)
+    else:
+        metrics_WaziGate_ID = data["devices"][metrics_WaziGate_deviceName]["device_id"]
+        res = wazigate_EdgeAPI_util.check_with_wazigate(metrics_WaziGate_deviceName, metrics_WaziGate_ID, "","")
+        # todo: add code to check if device check was successful? (may be redundant as already done in wazigate_EdgeAPI_util)
+        if res == 200: print(f"[CLIENT] {metrics_WaziGate_deviceName} found on WaziGate..")
 
 def check_WaziGate_sensors_configuration():
     data = load_json_file(WAZIGATE_CONFIG_FILE)
     biodigester_WaziGate_deviceName = list(data["devices"].keys())[0]
     chiller_WaziGate_deviceName = list(data["devices"].keys())[1]
+    metrics_WaziGate_deviceName = list(data["devices"].keys())[2]
 
     # 1. Check biodigester sensors
     biodigester_WaziGate_deviceID = data["devices"][list(data["devices"].keys())[0]]["device_id"]
@@ -134,6 +155,16 @@ def check_WaziGate_sensors_configuration():
             wazigate_EdgeAPI_util.check_with_wazigate("", chiller_WaziGate_deviceID, sensor_name, sensor_ID, chiller_WaziGate_deviceName)
         else:
             wazigate_EdgeAPI_util.create_sensor(chiller_WaziGate_deviceID, sensor_name, chiller_WaziGate_deviceName)
+
+    # 3. Check metrics device
+    metrics_WaziGate_deviceID = data["devices"][list(data["devices"].keys())[2]]["device_id"]
+    metrics_sensors = data["devices"][list(data["devices"].keys())[2]]["sensors"]
+    for sensor_name, sensor_ID in metrics_sensors.items():
+        if sensor_ID:
+            wazigate_EdgeAPI_util.check_with_wazigate("", metrics_WaziGate_deviceID, sensor_name, sensor_ID, metrics_WaziGate_deviceName)
+        else:
+            wazigate_EdgeAPI_util.create_sensor(metrics_WaziGate_deviceID, sensor_name, metrics_WaziGate_deviceName)
+
 
 def wazigate_mqtt_publish_sensor_value(device_name, sensor_values, data):
     device = data["devices"][device_name]
