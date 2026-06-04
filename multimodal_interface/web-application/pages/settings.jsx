@@ -25,7 +25,7 @@ function SettingsPage() {
   };
 
   return (
-    <div className="flex flex-col h-screen font-sans text-gray-800 bg-[#BDC1CA] overflow-hidden">
+    <div className="flex flex-col h-screen font-sans text-gray-800 bg-[#E5E7EB] overflow-hidden">
       {/* Imported Header */}
       <Header title="Settings" />
 
