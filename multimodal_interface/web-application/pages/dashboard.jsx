@@ -2,35 +2,77 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "../src/components/layout/Sidebar";
 import Header from "../src/components/layout/Header";
 import Footer from "../src/components/layout/Footer";
-import DashboardCard from "../src/components/dashboard/DashboardCard";
-import { SENSOR_CONFIG } from "../src/utils/sensorMapping";
+import PerformanceCard from "../src/components/dashboard/PerformanceCard";
+import PerformanceTrendGraphs from "../src/components/dashboard/PerformanceTrendGraphs"; 
+import { SYSTEM_CONFIG } from "../src/utils/sensorMapping";
 
 const WAZIGATE_IP = "127.0.0.1";
 
 const Dashboard = () => {
   const [data, setData] = useState({});
+  
+  // STATE: For historical 4-week chart data
+  const [historicalData, setHistoricalData] = useState({
+    energy: [],
+    gas: []
+  });
 
+  // EFFECT 1: Fetch live instantaneous data from WaziGate every 2 seconds
   useEffect(() => {
     const fetchAllSensors = async () => {
-      const sensorEntries = Object.entries(SENSOR_CONFIG);
-      const updates = {};
-      const timestamp = new Date().getTime();
+      try {
+        const devicesRes = await fetch(`http://${WAZIGATE_IP}/devices`, { cache: "no-store" });
+        if (!devicesRes.ok) return;
+        const devicesList = await devicesRes.json();
 
-      await Promise.all(
-        sensorEntries.map(async ([id, config]) => {
-          try {
-            const url = `http://${WAZIGATE_IP}/devices/${config.dev}/sensors/${id}/value?t=${timestamp}`;
-            const res = await fetch(url, { cache: "no-store" });
-            if (res.ok) {
-              const text = await res.text();
-              updates[config.key] = text.trim();
-            }
-          } catch (e) { /* Fail silently */ }
-        })
-      );
+        const waziMap = {};
+        devicesList.forEach((device) => {
+          const sensorNameMap = {};
+          if (Array.isArray(device.sensors)) {
+            device.sensors.forEach((sensor) => {
+              sensorNameMap[sensor.name] = sensor.id; 
+            });
+          }
+          waziMap[device.name] = { 
+            id: device.id, 
+            sensors: sensorNameMap 
+          };
+        });
 
-      if (Object.keys(updates).length > 0) {
-        setData(prev => ({ ...prev, ...updates }));
+        const updates = {};
+        const timestamp = new Date().getTime();
+        const fetchPromises = [];
+
+        for (const [sysDevName, sysDevConfig] of Object.entries(SYSTEM_CONFIG)) {
+          const waziDevice = waziMap[sysDevName];
+          if (waziDevice) {
+            sysDevConfig.sensors.forEach((sensorKeyName) => {
+              const actualSensorId = waziDevice.sensors[sensorKeyName];
+              if (actualSensorId) {
+                const url = `http://${WAZIGATE_IP}/devices/${waziDevice.id}/sensors/${actualSensorId}/value?t=${timestamp}`;
+                
+                fetchPromises.push(
+                  fetch(url, { cache: "no-store" })
+                    .then((res) => (res.ok ? res.text() : null))
+                    .then((text) => {
+                      if (text !== null) {
+                        updates[sensorKeyName] = text.trim();
+                      }
+                    })
+                    .catch(() => { /* Fail silently */ })
+                );
+              }
+            });
+          }
+        }
+
+        await Promise.all(fetchPromises);
+
+        if (Object.keys(updates).length > 0) {
+          setData((prev) => ({ ...prev, ...updates }));
+        }
+      } catch (e) {
+        console.error("Dashboard Sync Error: Failed to fetch sensor data mapping.", e);
       }
     };
 
@@ -39,30 +81,60 @@ const Dashboard = () => {
     return () => clearInterval(interval);
   }, []);
 
-  return (
-    <div className="flex h-screen overflow-hidden text-gray-900 font-sans">
-      <Sidebar activePage="dashboard" />
+  // EFFECT 2: Standalone Animation Simulator for Graphs
+  useEffect(() => {
+    const simulateLiveData = setInterval(() => {
       
-      <div className="flex flex-col flex-1 overflow-y-auto bg-gray-50">
-        
-        {/* Header: Strict 64px */}
-        <div className="h-16 min-h-[64px] flex-shrink-0 border-b border-gray-200">
-          <Header title="Dashboard" />
-        </div>
+      setHistoricalData((prev) => {
+        const prevEnergy = prev.energy.length > 0 ? prev.energy[3].output : 1250.0;
+        const prevGas = prev.gas.length > 0 ? prev.gas[3].actual : 78.5;
 
-        {/* Main Content Area */}
-        <main className="flex-grow pt-[20px] pb-8 pr-8 pl-[278px] min-h-[calc(100vh-64px)]">
-          
-          <h2 className="text-[32px] font-bold text-gray-900 mb-[22px] tracking-wide ml-[10px]">
+        // Large enough fluctuation so the animation is clearly visible on a large scale
+        const nextEnergy = prevEnergy + (Math.random() * 80 - 40); 
+        const nextGas = prevGas + (Math.random() * 3 - 1.5);
+
+        return {
+          energy: [
+            { week: 'Week 1', output: 1200 },
+            { week: 'Week 2', output: 1210 },
+            { week: 'Week 3', output: 1230 },
+            { week: 'Week 4', output: Number(nextEnergy.toFixed(1)) }, 
+          ],
+          gas: [
+            { week: 'Week 1', actual: 70, target: 75 },
+            { week: 'Week 2', actual: 73, target: 75 },
+            { week: 'Week 3', actual: 76, target: 75 },
+            { week: 'Week 4', actual: Number(nextGas.toFixed(1)), target: 75 }, 
+          ]
+        };
+      });
+      
+    }, 2000);
+
+    return () => clearInterval(simulateLiveData);
+  }, []);
+
+  return (
+    <div className="flex flex-col h-screen overflow-hidden text-gray-900 font-sans">
+      <header className="h-16 min-h-[64px] max-h-[64px] w-full flex-shrink-0 border-b border-gray-200 z-10">
+        <Header title="Dashboard" />
+      </header>
+
+      <div className="flex flex-1 overflow-hidden">
+        <aside className="w-[278px] flex-shrink-0 bg-white border-r border-gray-200 overflow-y-auto">
+          <Sidebar activePage="dashboard" />
+        </aside>
+
+        <main className="flex-1 overflow-y-auto bg-gray-50 pt-0 pb-8 pr-8 pl-10">
+          <h2 className="text-[32px] font-bold text-gray-900 mb-[22px] tracking-wide">
             System component
           </h2>
-
           <div className="flex gap-8 items-start">
             
-            {/* Left Column: Fixed Width 428px, Total Height 424px (200 + 24 gap + 200) */}
+            {/* Left Column: Fixed Width 428px */}
             <div className="flex flex-col gap-6 w-[428px]">
               
-              {/* Biodigester: Height 200px */}
+              {/* Biodigester Card */}
               <div className="h-[200px]">
                 <div className="w-full h-full bg-white rounded-xl border border-green-300 p-5 shadow-sm flex flex-col">
                   <div className="flex justify-between items-start mb-0">
@@ -86,7 +158,7 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              {/* Chiller: Height 200px */}
+              {/* Chiller Card */}
               <div className="h-[200px]">
                 <div className="w-full h-full bg-white rounded-xl border border-green-300 p-5 shadow-sm flex flex-col">
                   <div className="flex justify-between items-start mb-0">
@@ -106,20 +178,21 @@ const Dashboard = () => {
                   </div>
                 </div>
               </div>
+
             </div>
 
-            {/* Right Column: Width 940px, Forced Height 424px */}
-            <div className="w-[940px] h-[424px]">
+            {/* Electrical Components: Aligned Width 888px */}
+            <div className="w-[888px] h-[424px]">
               <div className="w-full h-full bg-white rounded-xl border border-green-300 p-5 shadow-sm flex flex-col">
                 <h3 className="text-[24px] font-bold text-gray-800 mb-4 tracking-tight flex-shrink-0">Electrical components</h3>
                 <div className="overflow-hidden flex-grow flex flex-col">
-                  <table className="w-full text-left border-collapse border border-gray-200">
-                    <thead className="bg-gray-50 font-bold text-black text-[20px]">
+                  <table className="w-full text-left border-collapse">
+                    <thead className="bg-gray-50 font-bold text-black text-[18px]">
                       <tr>
-                        <th className="py-1.5 px-6 border border-gray-200">Component</th>
-                        <th className="py-1.5 px-6 border border-gray-200 text-center">Status</th>
-                        <th className="py-1.5 px-6 border border-gray-200 text-center">Alarm</th>
-                        <th className="py-1.5 px-6 border border-gray-200 text-center">Indicator</th>
+                        <th className="py-1.5 px-4 border border-gray-200">Component</th>
+                        <th className="py-1.5 px-4 border border-gray-200 text-center">Status</th>
+                        <th className="py-1.5 px-4 border border-gray-200 text-center">Alarm</th>
+                        <th className="py-1.5 px-4 border border-gray-200 text-center">Indicator</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -138,23 +211,49 @@ const Dashboard = () => {
             </div>
 
           </div>
+
+          {/* Performance Section */}
+          <div className="mt-[20px]">
+            <h2 className="text-[32px] font-bold text-gray-900 mb-[22px] tracking-wide">
+              Weekly Performance Metrics
+            </h2>
+            <div className="flex gap-8 flex-wrap">
+              <PerformanceCard label="Energy Output" value={data.energy_output || 1250.7} unit="kWh" trend={3.2} icon="energy" />
+              <PerformanceCard label="Gas Production" value={data.gas_production || 78.5} unit="m³/h" trend={-1.5} icon="production" />
+              <PerformanceCard 
+                label="Substrate Feeding Rate" 
+                value={Number(data.substrate_feeding_rate || 23.1).toFixed(3)} 
+                unit="tons/h" 
+                trend={0.8} 
+                icon="feeding" 
+              />
+            </div>
+            
+            {/* Performance Trend Graphs Section */}
+            <div className="mt-10">
+              <h2 className="text-[32px] font-bold text-gray-900 mb-[22px] tracking-wide">
+                Performance Trend Graphs
+              </h2>
+              <PerformanceTrendGraphs 
+                energyData={historicalData.energy} 
+                gasData={historicalData.gas} 
+              />
+            </div>
+            
+          </div>
         </main>
-        
-        <Footer />
       </div>
+      <Footer />
     </div>
   );
 };
 
-// --- Reusable Component Helpers ---
-
+// Reusable Helpers
 const MetricRow = ({ label, value, unit }) => (
   <div className="flex justify-between items-center">
     <span className="text-gray-800 text-[18px] leading-tight">{label}</span>
-    {/* Removed global font-bold from the wrapper span */}
     <span className="text-gray-900 text-[18px] leading-tight w-[120px] text-center">
-      {/* Explicitly targeted font weights for value vs unit */}
-      <span className="font-bold">{value ?? "--"}</span> <span className="font-normal">{unit}</span>
+      <span className="font-bold">{value ?? "--"}</span> <span className="font-normal ml-1">{unit}</span>
     </span>
   </div>
 );
@@ -162,21 +261,14 @@ const MetricRow = ({ label, value, unit }) => (
 const StatusRow = ({ name, status, alarm }) => {
   const isOff = status === "0" || status === 0;
   const isNormal = alarm === "0" || alarm === 0;
-
   const indicatorColor = isNormal ? "bg-green-500" : "bg-red-500";
-
+  
   return (
     <tr className="font-sans">
-      <td className="py-1.5 px-6 border border-gray-200 text-gray-700 font-medium text-[18px]">{name}</td>
-      <td className="py-1.5 px-6 border border-gray-200 font-bold text-center uppercase text-[18px]">
-        {status !== undefined ? (isOff ? "OFF" : "ON") : "--"}
-      </td>
-      <td className={`py-1.5 px-6 border border-gray-200 text-center text-[18px] ${isNormal ? "text-black" : "text-red-600"}`}>
-        {alarm !== undefined ? (isNormal ? "Normal" : "Warning") : "--"}
-      </td>
-      <td className="py-1.5 px-6 border border-gray-200">
-        <div className={`w-3 h-3 rounded-full mx-auto ${indicatorColor} shadow-sm`} />
-      </td>
+      <td className="py-1.5 px-4 border border-gray-200 text-gray-700 font-medium text-[18px]">{name}</td>
+      <td className="py-1.5 px-4 border border-gray-200 font-bold text-center uppercase text-[18px]">{status !== undefined ? (isOff ? "OFF" : "ON") : "--"}</td>
+      <td className={`py-1.5 px-4 border border-gray-200 text-center text-[18px] ${isNormal ? "text-black" : "text-red-600"}`}>{alarm !== undefined ? (isNormal ? "Normal" : "Warning") : "--"}</td>
+      <td className="py-1.5 px-4 border border-gray-200"><div className={`w-3 h-3 rounded-full mx-auto ${indicatorColor} shadow-sm`} /></td>
     </tr>
   );
 };
