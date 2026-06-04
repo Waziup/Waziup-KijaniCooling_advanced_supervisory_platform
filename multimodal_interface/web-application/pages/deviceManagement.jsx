@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom"; // Ensure react-router-dom is installed
+import { Link } from "react-router-dom";
 import Sidebar from "../src/components/layout/Sidebar";
 import Header from "../src/components/layout/Header";
 import Footer from "../src/components/layout/Footer";
-import { SENSOR_CONFIG } from "../src/utils/sensorMapping";
+import { SYSTEM_CONFIG } from "../src/utils/sensorMapping"; // Updated Import
 import DeleteConfirm from "../src/components/devices/DeleteConfirm";
 
 // Helper component for the Status Badge colors
@@ -47,54 +47,49 @@ const DeviceManagement = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Transform SENSOR_CONFIG into table rows
+  // Transform SYSTEM_CONFIG into table rows
   useEffect(() => {
-    const tableData = Object.entries(SENSOR_CONFIG).map(([hexId, config], index) => {
-      const idSuffix = hexId.slice(-3);
-      const keyStr = config.key || "";
-      
-      const getDeviceDetails = (key) => {
-        const lowerKey = key.toLowerCase();
-        
-        // CC and CH are circulator pumps
-        if (lowerKey.startsWith('cc') || lowerKey.startsWith('ch') || lowerKey.startsWith('vc')) {
-          return { name: `Circulator Pump (${key})`, type: 'Pump' };
-        }
-        if (lowerKey.startsWith('si')) {
-          return { name: `Pump/Motor (${key})`, type: 'Pump' };
-        }
-        if (lowerKey.startsWith('al')) {
-          return { name: `Alarm Indicator (${key})`, type: 'Alarm' };
-        }
-        if (lowerKey.startsWith('vg')) {
-          return { name: `Gas Valve (${key})`, type: 'Valve' };
-        }
-        // T starts are Temperature Sensors
-        if (lowerKey.startsWith('t')) {
-          return { name: `Temperature Sensor (${key})`, type: 'Sensor' };
-        }
-        // P starts are Pressure Sensors
-        if (lowerKey.startsWith('p')) {
-          return { name: `Pressure Sensor (${key})`, type: 'Sensor' };
-        }
-        if (lowerKey.startsWith('fit')) return { name: `Flowrate Sensor (${key})`, type: 'Sensor' };
-        if (lowerKey.startsWith('lit')) return { name: `Level Sensor (${key})`, type: 'Sensor' };
-        
-        return { name: `Device Component (${key})`, type: 'Device' };
-      };
+    const tableData = [];
+    let globalIndex = 0;
 
-      const details = getDeviceDetails(keyStr);
-      const statusList = ["Active", "Active", "Inactive", "Active", "Offline"];
-      
-      return {
-        id: hexId,
-        deviceId: `DEV-${idSuffix}`,
-        name: details.name,
-        type: details.type,
-        location: 'KYEYO Farm',
-        status: statusList[index % statusList.length],
-        installDate: `2026-0${(index % 9) + 1}-15` 
-      };
+    // Loop through the new grouped configuration
+    Object.entries(SYSTEM_CONFIG).forEach(([parentDeviceName, config]) => {
+      config.sensors.forEach((sensorKey) => {
+        const lowerKey = sensorKey.toLowerCase();
+        
+        const getDeviceDetails = (key) => {
+          // CC and CH are circulator pumps
+          if (key.startsWith('cc') || key.startsWith('ch') || key.startsWith('vc')) {
+            return { name: `Circulator Pump (${key})`, type: 'Pump' };
+          }
+          if (key.startsWith('si')) return { name: `Pump/Motor (${key})`, type: 'Pump' };
+          if (key.startsWith('al')) return { name: `Alarm Indicator (${key})`, type: 'Alarm' };
+          if (key.startsWith('vg')) return { name: `Gas Valve (${key})`, type: 'Valve' };
+          
+          // Sensors
+          if (key.startsWith('t')) return { name: `Temperature Sensor (${key})`, type: 'Sensor' };
+          if (key.startsWith('p')) return { name: `Pressure Sensor (${key})`, type: 'Sensor' };
+          if (key.startsWith('fit')) return { name: `Flowrate Sensor (${key})`, type: 'Sensor' };
+          if (key.startsWith('lit')) return { name: `Level Sensor (${key})`, type: 'Sensor' };
+          
+          return { name: `Device Component (${key})`, type: 'Device' };
+        };
+
+        const details = getDeviceDetails(lowerKey);
+        const statusList = ["Active", "Active", "Inactive", "Active", "Offline"];
+        
+        tableData.push({
+          id: `${parentDeviceName}-${sensorKey}`, // Create a unique ID for React mapping
+          deviceId: `DEV-${sensorKey.toUpperCase()}`, // Cleaner display ID (e.g. DEV-SI_01)
+          name: details.name,
+          type: details.type,
+          location: 'KYEYO Farm',
+          status: statusList[globalIndex % statusList.length],
+          installDate: `2026-0${(globalIndex % 9) + 1}-15` 
+        });
+
+        globalIndex++;
+      });
     });
 
     setDevices(tableData);
