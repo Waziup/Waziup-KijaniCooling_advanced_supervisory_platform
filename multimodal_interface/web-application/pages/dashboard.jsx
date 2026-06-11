@@ -169,7 +169,7 @@ const Dashboard = () => {
                     </div>
                   </div>
                   <div className="flex flex-col flex-grow justify-start gap-1 mt-2.5">
-                    <MetricRow label="Biogas flowrate" value={data.vg1} unit="Kg/h" />
+                    <MetricRow label="Biogas flowrate" value={data.vg1} unit="m³/h" />
                     <MetricRow label="Outlet temperature" value={data.th1} unit="°C" />
                     <MetricRow label="Inlet temperature" value={data.th2} unit="°C" />
                     <MetricRow label="Flow Rate" value={data.vc1} unit="L/min" />
@@ -222,7 +222,7 @@ const Dashboard = () => {
               <PerformanceCard 
                 label="Substrate Feeding Rate" 
                 value={Number(data.substrate_feeding_rate || 23.1).toFixed(3)} 
-                unit="tons/h" 
+                unit="kg/h" 
                 trend={0.8} 
                 icon="feeding" 
               />
