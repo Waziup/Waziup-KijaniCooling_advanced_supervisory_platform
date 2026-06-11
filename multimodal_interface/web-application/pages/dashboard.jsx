@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Sidebar from "../src/components/layout/Sidebar";
 import Header from "../src/components/layout/Header";
 import Footer from "../src/components/layout/Footer";
@@ -10,12 +10,17 @@ const WAZIGATE_IP = "127.0.0.1";
 
 const Dashboard = () => {
   const [data, setData] = useState({});
+  const dataRef = useRef(data); 
   
-  // STATE: For historical 4-week chart data
+  // STATE: For real-time rolling chart data (last 7 readings)
   const [historicalData, setHistoricalData] = useState({
     energy: [],
     gas: []
   });
+
+  useEffect(() => {
+    dataRef.current = data;
+  }, [data]);
 
   // EFFECT 1: Fetch live instantaneous data from WaziGate every 2 seconds
   useEffect(() => {
@@ -77,41 +82,35 @@ const Dashboard = () => {
     };
 
     fetchAllSensors();
-    const interval = setInterval(fetchAllSensors, 2000);
+    const interval = setInterval(fetchAllSensors, 2000); 
     return () => clearInterval(interval);
   }, []);
 
-  // EFFECT 2: Standalone Animation Simulator for Graphs
+  // EFFECT 2: Rolling Window for Graph Data (Updates every 20 seconds)
   useEffect(() => {
-    const simulateLiveData = setInterval(() => {
-      
-      setHistoricalData((prev) => {
-        const prevEnergy = prev.energy.length > 0 ? prev.energy[3].output : 1250.0;
-        const prevGas = prev.gas.length > 0 ? prev.gas[3].actual : 78.5;
+    const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    let dayIndex = 0; 
 
-        // Large enough fluctuation so the animation is clearly visible on a large scale
-        const nextEnergy = prevEnergy + (Math.random() * 80 - 40); 
-        const nextGas = prevGas + (Math.random() * 3 - 1.5);
+    const updateGraph = () => {
+      setHistoricalData((prev) => {
+        const latestData = dataRef.current;
+        const currentEnergy = Number(latestData.energy_output) || 1250.7; 
+        const currentGas = Number(latestData.gas_production) || 78.5;
+        
+        const currentDay = daysOfWeek[dayIndex % 7];
+        dayIndex++;
 
         return {
-          energy: [
-            { week: 'Week 1', output: 1200 },
-            { week: 'Week 2', output: 1210 },
-            { week: 'Week 3', output: 1230 },
-            { week: 'Week 4', output: Number(nextEnergy.toFixed(1)) }, 
-          ],
-          gas: [
-            { week: 'Week 1', actual: 70, target: 75 },
-            { week: 'Week 2', actual: 73, target: 75 },
-            { week: 'Week 3', actual: 76, target: 75 },
-            { week: 'Week 4', actual: Number(nextGas.toFixed(1)), target: 75 }, 
-          ]
+          energy: [...prev.energy, { timeLabel: currentDay, output: currentEnergy }].slice(-7),
+          gas: [...prev.gas, { timeLabel: currentDay, actual: currentGas, target: 75 }].slice(-7)
         };
       });
-      
-    }, 2000);
+    };
 
-    return () => clearInterval(simulateLiveData);
+    updateGraph();
+    const interval = setInterval(updateGraph, 20000);
+    
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -232,7 +231,7 @@ const Dashboard = () => {
             {/* Performance Trend Graphs Section */}
             <div className="mt-10">
               <h2 className="text-[32px] font-bold text-gray-900 mb-[22px] tracking-wide">
-                Performance Trend Graphs
+                Weekly Performance Trends
               </h2>
               <PerformanceTrendGraphs 
                 energyData={historicalData.energy} 

@@ -6,18 +6,17 @@ const PerformanceTrendGraphs = ({ energyData, gasData }) => {
     <div className="w-full font-sans mt-[20px]">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
-        {/* Left Card: 4-Week Energy Output */}
+        {/* Left Card: Live Energy Output */}
         <div className="bg-white rounded-xl border border-green-400 p-6 shadow-sm flex flex-col">
           <div className="mb-6">
             <h3 className="text-[24px] font-bold text-gray-900 leading-none mb-2">Energy Output Trend</h3>
-            <p className="text-sm text-gray-500">Output Energy over the last 4 weeks.</p>
+            <p className="text-sm text-gray-500">Output Energy over the last 7 days.</p>
           </div>
           <div className="h-[250px] w-full flex justify-center flex-grow">
             <ResponsiveContainer width="90%" height="100%">
               <LineChart data={energyData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#d1d5db" />
-                <XAxis dataKey="week" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#9ca3af' }} dy={10} />
-                {/* Dynamically zoomed Y-Axis so animations are visible on large numbers */}
+                <XAxis dataKey="timeLabel" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#9ca3af' }} dy={10} />
                 <YAxis 
                   width={75} 
                   axisLine={false} 
@@ -32,9 +31,9 @@ const PerformanceTrendGraphs = ({ energyData, gasData }) => {
                   type="monotone" 
                   name="Energy Output" 
                   dataKey="output" 
-                  stroke="#1f2937" 
-                  strokeWidth={2} 
-                  dot={{ r: 3, fill: '#1f2937' }} 
+                  stroke="#1d4ed8" 
+                  strokeWidth={3} 
+                  dot={{ r: 4, fill: '#1d4ed8' }} 
                   isAnimationActive={true}
                   animationDuration={800}
                 />
@@ -47,13 +46,13 @@ const PerformanceTrendGraphs = ({ energyData, gasData }) => {
         <div className="bg-white rounded-xl border border-green-400 p-6 shadow-sm flex flex-col">
           <div className="mb-6">
             <h3 className="text-[24px] font-bold text-gray-900 leading-none mb-2">Actual vs Target Gas Production</h3>
-            <p className="text-sm text-gray-500">Weekly gas production compared to target over 4 weeks.</p>
+            <p className="text-sm text-gray-500">Live gas production compared to target.</p>
           </div>
           <div className="h-[250px] w-full flex justify-center flex-grow">
             <ResponsiveContainer width="90%" height="100%">
               <LineChart data={gasData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#d1d5db" />
-                <XAxis dataKey="week" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#9ca3af' }} dy={10} />
+                <XAxis dataKey="timeLabel" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#9ca3af' }} dy={10} />
                 <YAxis 
                   width={75} 
                   axisLine={false} 
@@ -63,14 +62,14 @@ const PerformanceTrendGraphs = ({ energyData, gasData }) => {
                   domain={['dataMin - 5', 'dataMax + 5']}
                 />
                 <Tooltip />
-                <Legend verticalAlign="bottom" height={36} iconType="circle" />
+                <Legend verticalAlign="bottom" height={36} iconType="plainline" />
                 <Line 
                   type="monotone" 
                   name="Actual Production" 
                   dataKey="actual" 
-                  stroke="#1f2937" 
-                  strokeWidth={2} 
-                  dot={{ r: 3, fill: '#1f2937' }} 
+                  stroke="#1d4ed8" 
+                  strokeWidth={3} 
+                  dot={{ r: 4, fill: '#1d4ed8' }} 
                   isAnimationActive={true}
                   animationDuration={800}
                 />
@@ -78,9 +77,10 @@ const PerformanceTrendGraphs = ({ energyData, gasData }) => {
                   type="monotone" 
                   name="Target Production" 
                   dataKey="target" 
-                  stroke="#4b5563" 
+                  stroke="#f59e0b" 
                   strokeWidth={2} 
-                  dot={{ r: 3, fill: '#4b5563' }} 
+                  strokeDasharray="5 5"
+                  dot={false} 
                   isAnimationActive={true}
                   animationDuration={800}
                 />
