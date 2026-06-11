@@ -5,8 +5,9 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Dashboard from '../pages/dashboard';
 import DeviceManagement from '../pages/deviceManagement';
 import Settings from '../pages/settings'; 
+import Help from '../pages/help'; // <-- 1. Imported the new Help page here
 
-// 2. THIS STAYS THE SAME: Because `components` is already inside `src` next to App.jsx
+// THIS STAYS THE SAME: Because `components` is already inside `src` next to App.jsx
 import AddDevice from '../src/components/devices/AddDevice'; 
 
 function App() {
@@ -16,7 +17,8 @@ function App() {
         <Route path="/" element={<Dashboard />} />
         <Route path="/devices" element={<DeviceManagement />} />
         <Route path="/add-device" element={<AddDevice />} />
-        <Route path="/settings" element={<Settings />} /> {/* <-- Added the Settings route */}
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/help" element={<Help />} /> {/* <-- 2. Added the Help route here */}
       </Routes>
     </Router>
   );
