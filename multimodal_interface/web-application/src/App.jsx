@@ -1,13 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-// Add the two dots `../` to go up one level to find the `pages` folder
+// Page imports
 import Dashboard from '../pages/dashboard';
 import DeviceManagement from '../pages/deviceManagement';
 import Settings from '../pages/settings'; 
-import Help from '../pages/help'; // <-- 1. Imported the new Help page here
+import Help from '../pages/help'; 
+import Notifications from '../pages/notifications'; // <-- 1. Imported the new Notifications page
 
-// THIS STAYS THE SAME: Because `components` is already inside `src` next to App.jsx
+// Component imports
 import AddDevice from '../src/components/devices/AddDevice'; 
 
 function App() {
@@ -18,7 +19,8 @@ function App() {
         <Route path="/devices" element={<DeviceManagement />} />
         <Route path="/add-device" element={<AddDevice />} />
         <Route path="/settings" element={<Settings />} />
-        <Route path="/help" element={<Help />} /> {/* <-- 2. Added the Help route here */}
+        <Route path="/help" element={<Help />} /> 
+        <Route path="/notifications" element={<Notifications />} /> {/* <-- 2. Added the Notifications route here */}
       </Routes>
     </Router>
   );
