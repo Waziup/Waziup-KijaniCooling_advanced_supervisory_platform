@@ -94,8 +94,10 @@ const Dashboard = () => {
     const updateGraph = () => {
       setHistoricalData((prev) => {
         const latestData = dataRef.current;
-        const currentEnergy = Number(latestData.energy_output) || 1250.7; 
-        const currentGas = Number(latestData.gas_production) || 78.5;
+        
+        // Use raw values so empty data passes cleanly into charts (avoiding static fallbacks)
+        const currentEnergy = Number(latestData.energy_output) || 0; 
+        const currentGas = Number(latestData.gas_production) || 0;
         
         const currentDay = daysOfWeek[dayIndex % 7];
         dayIndex++;
@@ -125,7 +127,7 @@ const Dashboard = () => {
         </aside>
 
         <main className="flex-1 overflow-y-auto bg-gray-50 pt-0 pb-8 pr-8 pl-10">
-          <h2 className="text-[32px] font-bold text-gray-900 mb-[22px] tracking-wide">
+          <h2 className="text-[32px] font-bold text-gray-900 mb-[22px] tracking-wide mt-5">
             System component
           </h2>
           <div className="flex gap-8 items-start">
@@ -216,13 +218,27 @@ const Dashboard = () => {
             <h2 className="text-[32px] font-bold text-gray-900 mb-[22px] tracking-wide">
               Weekly Performance Metrics
             </h2>
-            <div className="flex gap-8 flex-wrap">
-              <PerformanceCard label="Energy Output" value={data.energy_output || 1250.7} unit="kWh" trend={3.2} icon="energy" />
-              <PerformanceCard label="Gas Production" value={data.gas_production || 78.5} unit="m³/h" trend={-1.5} icon="production" />
+            
+            {/* 3-column grid structure perfectly matches the top row width */}
+            <div className="grid grid-cols-3 gap-8 w-[1348px]">
+              <PerformanceCard 
+                label="Energy Output" 
+                value={data.energy_output} 
+                unit="kWh" 
+                trend={3.2} 
+                icon="energy" 
+              />
+              <PerformanceCard 
+                label="Gas Production" 
+                value={data.gas_production} 
+                unit="m³/h" 
+                trend={-1.5} 
+                icon="production" 
+              />
               <PerformanceCard 
                 label="Substrate Feeding Rate" 
-                value={Number(data.substrate_feeding_rate || 23.1).toFixed(3)} 
-                unit="kg/h" 
+                value={data.substrate_feeding_rate ? Number(data.substrate_feeding_rate).toFixed(3) : undefined} 
+                unit="tons/h" 
                 trend={0.8} 
                 icon="feeding" 
               />
@@ -260,14 +276,22 @@ const MetricRow = ({ label, value, unit }) => (
 const StatusRow = ({ name, status, alarm }) => {
   const isOff = status === "0" || status === 0;
   const isNormal = alarm === "0" || alarm === 0;
-  const indicatorColor = isNormal ? "bg-green-500" : "bg-red-500";
+  
+  // Set default state as red if data is missing
+  const indicatorColor = (status === undefined || alarm === undefined) ? "bg-red-500" : (isNormal ? "bg-green-500" : "bg-red-500");
   
   return (
     <tr className="font-sans">
       <td className="py-1.5 px-4 border border-gray-200 text-gray-700 font-medium text-[18px]">{name}</td>
-      <td className="py-1.5 px-4 border border-gray-200 font-bold text-center uppercase text-[18px]">{status !== undefined ? (isOff ? "OFF" : "ON") : "--"}</td>
-      <td className={`py-1.5 px-4 border border-gray-200 text-center text-[18px] ${isNormal ? "text-black" : "text-red-600"}`}>{alarm !== undefined ? (isNormal ? "Normal" : "Warning") : "--"}</td>
-      <td className="py-1.5 px-4 border border-gray-200"><div className={`w-3 h-3 rounded-full mx-auto ${indicatorColor} shadow-sm`} /></td>
+      <td className="py-1.5 px-4 border border-gray-200 font-bold text-center uppercase text-[18px]">
+        {status !== undefined ? (isOff ? "OFF" : "ON") : "--"}
+      </td>
+      <td className={`py-1.5 px-4 border border-gray-200 text-center text-[18px] ${alarm !== undefined ? (isNormal ? "text-black" : "text-red-600") : "text-red-600"}`}>
+        {alarm !== undefined ? (isNormal ? "Normal" : "Warning") : "--"}
+      </td>
+      <td className="py-1.5 px-4 border border-gray-200">
+        <div className={`w-3 h-3 rounded-full mx-auto ${indicatorColor} shadow-sm`} />
+      </td>
     </tr>
   );
 };
