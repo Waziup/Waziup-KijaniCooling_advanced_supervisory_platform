@@ -6,7 +6,8 @@ import Dashboard from '../pages/dashboard';
 import DeviceManagement from '../pages/deviceManagement';
 import Settings from '../pages/settings'; 
 import Help from '../pages/help'; 
-import Notifications from '../pages/notifications'; // <-- 1. Imported the new Notifications page
+import Notifications from '../pages/notifications';
+import Troubleshooting from '../pages/troubleshooting'; // <-- 1. Imported the new Troubleshooting page
 
 // Component imports
 import AddDevice from '../src/components/devices/AddDevice'; 
@@ -20,7 +21,8 @@ function App() {
         <Route path="/add-device" element={<AddDevice />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/help" element={<Help />} /> 
-        <Route path="/notifications" element={<Notifications />} /> {/* <-- 2. Added the Notifications route here */}
+        <Route path="/notifications" element={<Notifications />} />
+        <Route path="/troubleshooting" element={<Troubleshooting />} /> {/* <-- 2. Added the Troubleshooting route here */}
       </Routes>
     </Router>
   );
