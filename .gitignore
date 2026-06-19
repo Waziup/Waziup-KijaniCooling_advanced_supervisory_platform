@@ -1,4 +1,4 @@
-data_ingestion/config/asb_wazigate_config.json 
-data_ingestion/config/wazigate_token.txt 
+#data_ingestion/config/asb_wazigate_config.json 
+#data_ingestion/config/wazigate_token.txt 
 env/ 
 **/__pycache__/
