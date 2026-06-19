@@ -1,3 +1,3 @@
 """
-Edge supervisory client package for KijaniBox ASB system.
+Edge supervisory client package for KijaniCooling ASB system.
 """

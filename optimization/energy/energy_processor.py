@@ -1,5 +1,5 @@
 """
-Energy optimization processor for KijaniBox ASB Chiller unit.
+Energy optimization processor for KijaniCooling ASB Chiller unit.
 Processes chiller sensor data and calculates energy output metrics.
 """
 
@@ -34,8 +34,8 @@ def process_energy_output(sensor_values, config):
             print(f"[ENERGY PROCESSOR] Calculated energy output: {energy_output}")
             print(f"[ENERGY PROCESSOR] Components - vg1: {vg1}, vg2: {vg2}, tc1: {tc1}, tc2: {tc2}")
         
-        # Get KijaniBox ASB metrics device configuration
-        metrics_device_name = "KijaniBox ASB metrics"
+        # Get KijaniCooling ASB metrics device configuration
+        metrics_device_name = "KijaniCooling ASB metrics"
         if metrics_device_name not in config.get("devices", {}):
             print(f"[ENERGY PROCESSOR] Error: {metrics_device_name} not found in config")
             return False

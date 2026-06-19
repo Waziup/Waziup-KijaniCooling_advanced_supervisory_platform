@@ -53,13 +53,13 @@ To view data on the WaziGate dashboard, you need to open the interface in your b
 ```
 google-chrome --disable-site-isolation-trials --disable-web-security --user-data-dir="~/tmp"
 ```
-## Run the KijaniBox supervisory platform
+## Run the KijaniCooling supervisory platform
 
-The following commands are run from the [Waziup-KijaniBox_advanced_supervisory_platform repository](https://github.com/Waziup/Waziup-KijaniBox_advanced_supervisory_platform).
+The following commands are run from the [Waziup-KijaniCooling_advanced_supervisory_platform repository](https://github.com/Waziup/Waziup-KijaniCooling_advanced_supervisory_platform).
 
 First, clone the rep on your local PC and navigate into it:
 ```
-cd Waziup-KijaniBox_advanced_supervisory_platform
+cd Waziup-KijaniCooling_advanced_supervisory_platform
 ```
 
 1. Create a virtual environment by running the command:
@@ -89,7 +89,35 @@ pip install -r requirements.txt
 python main.py
 ```
 
->**Note:** You can deactivate the Python environment with the command: deactivate env
+
+## Run the KijaniCooling supervisory platform with Docker
+
+Follow these steps from the repository root to run KijaniCooling with Docker Compose.
+
+1. Build and start the containers:
+```powershell
+docker-compose up --build -d
+```
+
+2. Open the frontend UI in your browser:
+```text
+http://localhost:5174
+```
+
+3. If you want to stop the stack:
+```powershell
+docker-compose down
+```
+
+4. If you need to rebuild only say the frontend and run it:
+```powershell
+docker-compose build frontend
+docker-compose up -d frontend
+```
+
+>**Note:** The backend container is not exposed on a host port by default. The frontend is served on `5174`, and the backend communicates with the local WaziGate gateway via `host.docker.internal`.
+
+>**Note:** If your WaziGate server is running on the local host, the frontend is configured to use `http://localhost` for WaziGate API requests.
 
 # License
 GPL-3.0 license??

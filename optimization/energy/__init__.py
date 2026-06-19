@@ -1,3 +1,3 @@
 """
-Energy optimization module for KijaniBox ASB system.
+Energy optimization module for KijaniCooling ASB system.
 """

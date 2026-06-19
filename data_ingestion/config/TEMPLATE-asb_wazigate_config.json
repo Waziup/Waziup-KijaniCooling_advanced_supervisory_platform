@@ -3,7 +3,7 @@
     "last_update_succeeded": false,
     "previous_update_attempt_state": false,
     "devices": {
-        "KijaniBox ASB-biodigester": {
+        "KijaniCooling ASB-biodigester": {
             "device_id": "",
             "sensors": {
                 "si_01": "",
@@ -47,7 +47,7 @@
                 "ti_16": ""
             }
         },
-        "KijaniBox ASB-chiller": {
+        "KijaniCooling ASB-chiller": {
             "device_id": "",
             "sensors": {
                 "vg1": "",
@@ -75,7 +75,7 @@
                 "cc2": ""
             }
         },
-        "KijaniBox ASB metrics": {
+        "KijaniCooling ASB metrics": {
             "device_id": "",
             "sensors": {
                 "energy_output": "",

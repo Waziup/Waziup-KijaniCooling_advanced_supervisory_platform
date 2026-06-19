@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kijanicooling-backend
+    environment:
+      - PYTHONUNBUFFERED=1
+      - WAZIGATE_URL=http://host.docker.internal:80
+    volumes:
+      - ./data_ingestion/config:/app/data_ingestion/config
+    networks:
+      - kijanicooling
+
+  frontend:
+    build:
+      context: ./multimodal_interface/web_application
+      dockerfile: Dockerfile
+      args:
+        VITE_WAZIGATE_API_URL: "http://localhost"
+    container_name: kijanicooling-frontend
+    ports:
+      - "5174:5174"
+    environment:
+      - VITE_API_URL=http://backend:5000
+    depends_on:
+      - backend
+    networks:
+      - kijanicooling
+
+networks:
+  kijanicooling:
+    driver: bridge

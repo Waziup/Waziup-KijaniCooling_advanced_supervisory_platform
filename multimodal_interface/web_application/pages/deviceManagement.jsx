@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import Sidebar from "../src/components/layout/Sidebar";
-import Header from "../src/components/layout/Header";
-import Footer from "../src/components/layout/Footer";
+import Sidebar from "../src/components/layout/sidebar";
+import Header from "../src/components/layout/header";
+import Footer from "../src/components/layout/footer";
 import { SYSTEM_CONFIG } from "../src/utils/sensorMapping"; // Updated Import
 import DeleteConfirm from "../src/components/devices/DeleteConfirm";
 

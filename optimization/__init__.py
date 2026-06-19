@@ -1,4 +1,4 @@
 """
-Optimization module for KijaniBox ASB system.
+Optimization module for KijaniCooling ASB system.
 Contains submodules for energy, gas production, and substrate feeding rate optimization.
 """

@@ -34,8 +34,8 @@ def process_gas_production(sensor_values, config):
             print(f"[GAS PRODUCTION PROCESSOR] Calculated gas production: {gas_production}")
             print(f"[GAS PRODUCTION PROCESSOR] Components - fit_13: {fit_13}, pi_06_3: {pi_06_3}, pi_11: {pi_11}")
         
-        # Get KijaniBox ASB metrics device configuration
-        metrics_device_name = "KijaniBox ASB metrics"
+        # Get KijaniCooling ASB metrics device configuration
+        metrics_device_name = "KijaniCooling ASB metrics"
         if metrics_device_name not in config.get("devices", {}):
             print(f"[GAS PRODUCTION PROCESSOR] Error: {metrics_device_name} not found in config")
             return False

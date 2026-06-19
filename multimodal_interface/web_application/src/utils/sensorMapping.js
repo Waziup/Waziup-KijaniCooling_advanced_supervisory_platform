@@ -4,7 +4,7 @@
 // ==========================================
 
 export const SYSTEM_CONFIG = {
-  "KijaniBox ASB-biodigester": {
+  "KijaniCooling ASB-biodigester": {
     sensors: [
       // Electrical / Status
       "si_01", "al_01", "wi_02", "si_02", "al_02", "hoa_02", 
@@ -19,7 +19,7 @@ export const SYSTEM_CONFIG = {
     ]
   },
   
-  "KijaniBox ASB-chiller": {
+  "KijaniCooling ASB-chiller": {
     sensors: [
       // Flow, Pressure & Pumps
       "vg1", "vh1", "vc1", "vc2", "pc1", "pg1", "ch1", "cc1", "cc2",
@@ -30,7 +30,7 @@ export const SYSTEM_CONFIG = {
     ]
   },
 
-  "KijaniBox ASB metrics": {
+  "KijaniCooling ASB metrics": {
     sensors: [
       // Performance Metrics
       "energy_output", "gas_production", "substrate_feeding_rate"

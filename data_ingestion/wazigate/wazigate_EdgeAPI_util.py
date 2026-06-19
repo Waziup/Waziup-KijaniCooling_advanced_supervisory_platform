@@ -5,7 +5,9 @@ import os
 show_debug_print = True
 
 #WAZIGATE_URL = "http://xxx.xxx.xxx.xx" # REPLACE WITH YOUR ACTUAL WAZIGATE IP
-WAZIGATE_URL = "http://localhost"       # Use this when running a local WaziGate-Edge server
+# Read WaziGate URL from environment when running in Docker/containers.
+# Default to localhost for local development.
+WAZIGATE_URL = os.getenv("WAZIGATE_URL", "http://localhost")       # Use this when running a local WaziGate-Edge server
 USERNAME = "admin"          # default
 PASSWORD = "loragateway"    # default
 BASE_PATH = os.path.dirname(os.path.abspath(__file__))
@@ -99,7 +101,7 @@ def create_sensor(device_id, name, fordevice=""):
         headers = headers,
         json = {
                 "meta": {
-                "createdBy": "KijaniBox supervision system",
+                "createdBy": "KijaniCooling supervision system",
                 "icon": "meter",
                 "kind": "OtherSensor"
                 },
@@ -117,7 +119,7 @@ def create_sensor(device_id, name, fordevice=""):
             headers = headers,
             json = {
                     "meta": {
-                    "createdBy": "KijaniBox supervision system",
+                    "createdBy": "KijaniCooling supervision system",
                     "icon": "meter",
                     "kind": "OtherSensor"
                     },

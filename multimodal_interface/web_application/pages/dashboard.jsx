@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import Sidebar from "../src/components/layout/Sidebar";
-import Header from "../src/components/layout/Header";
-import Footer from "../src/components/layout/Footer";
+import Sidebar from "../src/components/layout/sidebar";
+import Header from "../src/components/layout/header";
+import Footer from "../src/components/layout/footer";
 import PerformanceCard from "../src/components/dashboard/PerformanceCard";
 import PerformanceTrendGraphs from "../src/components/dashboard/PerformanceTrendGraphs"; 
 import { SYSTEM_CONFIG } from "../src/utils/sensorMapping";
 
-const WAZIGATE_IP = "127.0.0.1";
+const WAZIGATE_URL = import.meta.env.VITE_WAZIGATE_API_URL || 'http://127.0.0.1';
 
 const Dashboard = () => {
   const [data, setData] = useState({});
@@ -26,7 +26,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchAllSensors = async () => {
       try {
-        const devicesRes = await fetch(`http://${WAZIGATE_IP}/devices`, { cache: "no-store" });
+        const devicesRes = await fetch(`${WAZIGATE_URL}/devices`, { cache: "no-store" });
         if (!devicesRes.ok) return;
         const devicesList = await devicesRes.json();
 
@@ -54,7 +54,7 @@ const Dashboard = () => {
             sysDevConfig.sensors.forEach((sensorKeyName) => {
               const actualSensorId = waziDevice.sensors[sensorKeyName];
               if (actualSensorId) {
-                const url = `http://${WAZIGATE_IP}/devices/${waziDevice.id}/sensors/${actualSensorId}/value?t=${timestamp}`;
+                const url = `${WAZIGATE_URL}/devices/${waziDevice.id}/sensors/${actualSensorId}/value?t=${timestamp}`;
                 
                 fetchPromises.push(
                   fetch(url, { cache: "no-store" })

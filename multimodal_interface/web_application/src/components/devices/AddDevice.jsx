@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 // Adjust these import paths depending on exactly where you place this file!
-import Sidebar from "../layout/Sidebar";
-import Header from "../layout/Header";
-import Footer from "../layout/Footer";
+import Sidebar from "../layout/sidebar";
+import Header from "../layout/header";
+import Footer from "../layout/footer";
 
 const AddDevice = () => {
   // Form State

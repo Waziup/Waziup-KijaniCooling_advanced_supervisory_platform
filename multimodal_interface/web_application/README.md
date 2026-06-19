@@ -1,6 +1,6 @@
-# KijaniBox Advanced Supervisory Platform – Web Application
+# KijaniCooling Advanced Supervisory Platform – Web Application
 
-The KijaniBox Web Application is a web-based user interface for the KijaniBox system. It is part of a larger platform used to support monitoring and management of biogas operations. It provides a central place where users can interact with the system through a browser.
+The KijaniCooling Web Application is a web-based user interface for the KijaniCooling system. It is part of a larger platform used to support monitoring and management of biogas operations. It provides a central place where users can interact with the system through a browser.
 
 
 ## 🛠️ Prerequisites for Windows
@@ -30,7 +30,7 @@ git clone https://github.com/Waziup/Waziup-KijaniCooling_advanced_supervisory_pl
 Change your directory into the specific web application folder.
 
 ```
-cd Waziup-KijaniBox_advanced_supervisory_platform\multimodal_interface\web-application
+cd Waziup-KijaniCooling_advanced_supervisory_platform\multimodal_interface\web-application
 
 ```
 

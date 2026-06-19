@@ -1,3 +1,3 @@
 """
-Data ingestion package for KijaniBox ASB system.
+Data ingestion package for KijaniCooling ASB system.
 """

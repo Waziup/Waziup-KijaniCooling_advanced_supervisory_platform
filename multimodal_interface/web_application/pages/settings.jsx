@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Cog, Bell, Users, ChevronDown, ArrowRight } from 'lucide-react';
 
 // 1. Import Layout Components
-import Sidebar from "../src/components/layout/Sidebar";
-import Header from "../src/components/layout/Header";
-import Footer from "../src/components/layout/Footer";
+import Sidebar from "../src/components/layout/sidebar";
+import Header from "../src/components/layout/header";
+import Footer from "../src/components/layout/footer";
 
 function SettingsPage() {
   // State for toggles

@@ -34,8 +34,8 @@ def process_substrate_feeding_rate(sensor_values, config):
             print(f"[SUBSTRATE FEEDING RATE PROCESSOR] Calculated substrate feeding rate: {substrate_feeding_rate}")
             print(f"[SUBSTRATE FEEDING RATE PROCESSOR] Components - fit_13: {fit_13}, lit_06: {lit_06}, ti_06_1: {ti_06_1}")
         
-        # Get KijaniBox ASB metrics device configuration
-        metrics_device_name = "KijaniBox ASB metrics"
+        # Get KijaniCooling ASB metrics device configuration
+        metrics_device_name = "KijaniCooling ASB metrics"
         if metrics_device_name not in config.get("devices", {}):
             print(f"[SUBSTRATE FEEDING RATE PROCESSOR] Error: {metrics_device_name} not found in config")
             return False
