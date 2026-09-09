@@ -13,7 +13,7 @@ pipeline {
         DOCKER_PLATFORM = 'linux/arm64/v8'
         FORMER_IMAGES_DOCKER_ID = ''
         APP_NAME = 'waziup.kijanicooling-supervisory-platform'
-        LOCAL_WAZIGATE_IP = 'wazigate.local'
+        LOCAL_WAZIGATE_IP = WAZIGATE_IP
     }
 
     stages {
