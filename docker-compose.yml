@@ -4,8 +4,8 @@ services:
   backend:
     build:
       context: .
-      image: waziup/kijanicooling-backend:latest
       dockerfile: Dockerfile
+    image: waziup/kijanicooling-backend:latest
     container_name: waziup.kijanicooling-backend
     environment:
       - PYTHONUNBUFFERED=1
