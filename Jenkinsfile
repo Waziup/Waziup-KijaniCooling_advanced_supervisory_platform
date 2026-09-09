@@ -16,6 +16,25 @@ pipeline {
         LOCAL_WAZIGATE_IP = 'wazigate.local'
     }
 
+    stage('Checkout') {
+        steps {
+            script {
+                echo "Fetching latest commit from remote..."
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: '*/main']], // Change 'main' if your branch name is different
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/Waziup/Waziup-KijaniCooling_advanced_supervisory_platform.git',
+                        credentialsId: 'your-github-credentials-id' // Remove this line if the repo is public
+                    ]],
+                    extensions: [
+                        [$class: 'CleanBeforeCheckout']
+                    ]
+                ])
+            }
+        }
+    }
+
     stages {
         stage('Buildx Setup') {
             steps {
