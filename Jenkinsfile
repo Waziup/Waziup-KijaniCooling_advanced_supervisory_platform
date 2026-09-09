@@ -18,28 +18,26 @@ pipeline {
 
     stages {
 
-
-        stage('Buildx Setup') {
-
-            stage('Checkout') {
-                steps {
-                    script {
-                        echo "Fetching latest commit from remote..."
-                        checkout([
-                            $class: 'GitSCM',
-                            branches: [[name: '*/main']], // Change 'main' if your branch name is different
-                            userRemoteConfigs: [[
-                                url: 'https://github.com/Waziup/Waziup-KijaniCooling_advanced_supervisory_platform.git',
-                                credentialsId: 'your-github-credentials-id' // Remove this line if the repo is public
-                            ]],
-                            extensions: [
-                                [$class: 'CleanBeforeCheckout']
-                            ]
-                        ])
-                    }
+        stage('Checkout') {
+            steps {
+                script {
+                    echo "Fetching latest commit from remote..."
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: '*/main']],
+                        userRemoteConfigs: [[
+                            url: 'https://github.com/Waziup/Waziup-KijaniCooling_advanced_supervisory_platform.git'
+                            // credentialsId: 'your-github-credentials-id' // Add back if private repo
+                        ]],
+                        extensions: [
+                            [$class: 'CleanBeforeCheckout']
+                        ]
+                    ])
                 }
             }
-            
+        }
+
+        stage('Buildx Setup') {
             steps {
                 script {
                     sh 'docker run --rm --privileged multiarch/qemu-user-static --reset -p yes'
@@ -53,7 +51,7 @@ pipeline {
                     '''
                 }
             }
-        
+        }
 
         stage('Docker Cross-Build') {
             steps {
@@ -98,7 +96,6 @@ pipeline {
                             --build-arg VITE_WAZIGATE_API_URL=http://localhost \\
                             --load -f ./multimodal_interface/web_application/Dockerfile ./multimodal_interface/web_application
                     """
-
                 }
             }
         }
@@ -198,7 +195,6 @@ pipeline {
             }
         }
 
-
         stage('Save Docker Image') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
@@ -237,12 +233,10 @@ pipeline {
         }
     }
 
-
     post {
         always {
             sh 'docker image prune -f || true'                     // dangling layers + builder intermediates
             sh 'docker buildx prune -f --keep-storage 2GB || true' // cap buildx build cache
         }
     }
-}
 }
