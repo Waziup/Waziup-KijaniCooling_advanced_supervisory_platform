@@ -27,7 +27,7 @@ pipeline {
                         branches: [[name: '*/main']],
                         userRemoteConfigs: [[
                             url: 'https://github.com/Waziup/Waziup-KijaniCooling_advanced_supervisory_platform.git'
-                            // credentialsId: 'your-github-credentials-id' // Add back if private repo
+                            // credentialsId: 'your-github-credentials-id' // if repo is private
                         ]],
                         extensions: [
                             [$class: 'CleanBeforeCheckout']

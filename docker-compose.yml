@@ -4,8 +4,9 @@ services:
   backend:
     build:
       context: .
+      image: waziup/kijanicooling-backend:latest
       dockerfile: Dockerfile
-    container_name: kijanicooling-backend
+    container_name: waziup.kijanicooling-backend
     environment:
       - PYTHONUNBUFFERED=1
       - WAZIGATE_URL=http://host.docker.internal:80
@@ -20,7 +21,8 @@ services:
       dockerfile: Dockerfile
       args:
         VITE_WAZIGATE_API_URL: "http://localhost"
-    container_name: kijanicooling-frontend
+    image: waziup/kijanicooling-frontend:latest
+    container_name: waziup.kijanicooling-frontend
     ports:
       - "5174:5174"
     environment:
