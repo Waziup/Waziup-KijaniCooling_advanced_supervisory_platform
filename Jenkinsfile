@@ -20,14 +20,15 @@ pipeline {
         stage('Buildx Setup') {
             steps {
                 script {
-                    //Install docker buildx builder
                     sh 'docker run --rm --privileged multiarch/qemu-user-static --reset -p yes'
-                    catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
-                        sh 'docker buildx create --name rpibuilder --platform linux/arm64/v8; true'
-                    }
-                    sh 'docker buildx use rpibuilder'
-                    sh 'docker buildx inspect --bootstrap'
-                }
+                    // Create if it does not exist, otherwise switch to it
+                    sh '''
+                        if ! docker buildx inspect rpibuilder >/dev/null 2>&1; then
+                            docker buildx create --name rpibuilder --platform linux/arm64/v8
+                        fi
+                        docker buildx use rpibuilder
+                        docker buildx inspect --bootstrap
+                    '''
             }
         }
 
@@ -155,7 +156,7 @@ pipeline {
                                     echo "$SSH_PASSWORD_WAZIGATE" | sudo -S sh -e -c "
                                         docker-compose stop;
                                         docker-compose rm -f;
-                                        docker-compose up -d;
+                                        docker-compose up -d --no-build;
                                         docker image prune -f;
                                     "
                                 '
