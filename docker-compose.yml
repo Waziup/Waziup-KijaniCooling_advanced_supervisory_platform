@@ -10,6 +10,8 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
       - WAZIGATE_URL=http://host.docker.internal:80
+    extra_hosts:
+      - "host.docker.internal:host-gateway" # Resolve host.docker.internal to host IP
     volumes:
       - ./data_ingestion/config:/app/data_ingestion/config
     networks:
