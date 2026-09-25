@@ -14,6 +14,8 @@ services:
       - "host.docker.internal:host-gateway" # Resolve host.docker.internal to host IP
     networks:
       - kijanicooling
+    labels:
+      - "io.waziup.waziapp=waziup.kijanicooling"
 
   frontend:
     build:
@@ -21,7 +23,7 @@ services:
       dockerfile: Dockerfile
       args:
         #VITE_WAZIGATE_API_URL: "http://localhost"
-        VITE_WAZIGATE_API_URL: "http://wazigate-dashboard.staging.waziup.io"
+        VITE_WAZIGATE_API_URL: "http://wazigate-dashboard.staging.waziup.io" # FOR STAGING GA
     image: waziup/kijanicooling-frontend:latest
     container_name: waziup.kijanicooling-frontend
     ports:
@@ -32,6 +34,8 @@ services:
       - backend
     networks:
       - kijanicooling
+    labels:
+      - "io.waziup.waziapp=waziup.kijanicooling"
 
 networks:
   kijanicooling:
