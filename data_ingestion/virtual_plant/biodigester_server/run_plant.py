@@ -6,7 +6,7 @@ import random
 # Create an instance of ModbusServer
 server = ModbusServer("127.0.0.1", 12345, no_block=True)
 
-PLANT_UPDATE_INTERVAL = 20  # in seconds
+PLANT_UPDATE_INTERVAL = 300  # in seconds
 
 show_debug_print = False
 
