@@ -7,8 +7,8 @@ pipeline {
         timeout(time: 1, unit: 'HOURS')
     }
     environment {
-        FRONTEND_DOCKER_IMAGE_NAME = 'waziup/kijanicooling-backend'
-        BACKEND_DOCKER_IMAGE_NAME = 'waziup/kijanicooling-frontend'
+        FRONTEND_DOCKER_IMAGE_NAME = 'waziup/kijanicooling-frontend'
+        BACKEND_DOCKER_IMAGE_NAME = 'waziup/kijanicooling-backend'
         DOCKER_TAG_NAME = 'latest'
         DOCKER_PLATFORM = 'linux/arm64/v8'
         FORMER_IMAGES_DOCKER_ID = ''
