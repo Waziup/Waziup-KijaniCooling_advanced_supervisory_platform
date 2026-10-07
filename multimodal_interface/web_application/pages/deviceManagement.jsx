@@ -217,13 +217,11 @@ const DeviceManagement = () => {
                 <table className="w-full text-left border-collapse table-fixed">
                   <thead className="bg-gray-50/50">
                     <tr className="text-gray-900 font-['Inter'] font-medium text-[20px] border-b border-gray-300">
-                      <th className="py-3 px-4 pl-6 w-[28%]">Device Name</th>
-                      <th className="py-3 px-2 w-[12%]">Device ID</th>
-                      <th className="py-3 px-2 w-[12%]">Type</th>
-                      <th className="py-3 px-2 w-[15%]">Location</th>
-                      <th className="py-3 px-2 w-[10%]">Status</th>
-                      <th className="py-3 px-2 w-[12%]">Installation Date</th>
-                      <th className="py-3 px-4 pr-6 w-[11%] text-center">Actions</th>
+                      <th className="py-3 px-4 pl-6 w-[34%]">Device Name</th>
+                      <th className="py-3 px-2 w-[22%]">Device ID</th>
+                      <th className="py-3 px-2 w-[18%]">Type</th>
+                      <th className="py-3 px-2 w-[14%]">Status</th>
+                      <th className="py-3 px-4 pr-6 w-[12%] text-center">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -232,9 +230,7 @@ const DeviceManagement = () => {
                         <td className="py-3 px-4 pl-6 font-medium text-[#7A71E6] text-[16px] truncate pr-4">{device.name}</td>
                         <td className="py-3 px-2 text-gray-700 text-[16px] truncate">{device.deviceId}</td>
                         <td className="py-3 px-2 text-gray-700 text-[16px] truncate">{device.type}</td>
-                        <td className="py-3 px-2 text-gray-700 text-[16px] truncate pr-2">{device.location}</td>
                         <td className="py-3 px-2"><StatusBadge status={device.status} /></td>
-                        <td className="py-3 px-2 text-gray-700 text-[16px] truncate">{device.installDate}</td>
                         <td className="py-3 px-4 pr-6">
                           <div className="flex items-center justify-center gap-[16px]">
                             <button className="p-1.5 hover:bg-indigo-50 rounded transition-colors group">
@@ -251,7 +247,7 @@ const DeviceManagement = () => {
                       </tr>
                     )) : (
                       <tr>
-                        <td colSpan="7" className="py-8 text-center text-gray-500 text-[16px]">No devices found matching your search.</td>
+                        <td colSpan="5" className="py-8 text-center text-gray-500 text-[16px]">No devices found matching your search.</td>
                       </tr>
                     )}
                   </tbody>
