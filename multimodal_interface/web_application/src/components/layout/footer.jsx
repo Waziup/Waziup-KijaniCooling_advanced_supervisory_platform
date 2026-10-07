@@ -17,7 +17,7 @@ const Footer = () => {
       justify-center
     ">
       <p className="text-[12px] text-gray-800 font-sans">
-        © 2026 Device Manager. All rights reserved.
+        KijaniCooling · Advanced Supervisory Platform
       </p>
     </footer>
   );
