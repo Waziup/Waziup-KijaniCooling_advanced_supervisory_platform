@@ -182,10 +182,10 @@ const Dashboard = () => {
 
             </div>
 
-            {/* Electrical Components: Aligned Width 888px */}
+            {/* Pump Status: Aligned Width 888px */}
             <div className="w-[888px] h-[424px]">
               <div className="w-full h-full bg-white rounded-xl border border-green-300 p-5 shadow-sm flex flex-col">
-                <h3 className="text-[24px] font-bold text-gray-800 mb-4 tracking-tight flex-shrink-0">Electrical components</h3>
+                <h3 className="text-[24px] font-bold text-gray-800 mb-4 tracking-tight flex-shrink-0">Pump status</h3>
                 <div className="overflow-hidden flex-grow flex flex-col">
                   <table className="w-full text-left border-collapse">
                     <thead className="bg-gray-50 font-bold text-black text-[18px]">
@@ -193,18 +193,17 @@ const Dashboard = () => {
                         <th className="py-1.5 px-4 border border-gray-200">Component</th>
                         <th className="py-1.5 px-4 border border-gray-200 text-center">Status</th>
                         <th className="py-1.5 px-4 border border-gray-200 text-center">Alarm</th>
-                        <th className="py-1.5 px-4 border border-gray-200 text-center">Indicator</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <StatusRow name="Slurry pump" status={data.si_02} alarm={data.al_02} />
+                      <StatusRow name="Slurry pump" status={data.sl_02} alarm={data.al_02} />
                       <StatusRow name="St - pump stirrer" status={data.si_03} alarm={data.al_03} />
                       <StatusRow name="Feeding pump" status={data.si_02} alarm={data.al_02} />
                       <StatusRow name="Digestate pump" status={data.si_07} alarm={data.al_07} />
                       <StatusRow name="S-Recycle pump" status={data.si_06} alarm={data.al_06} />
-                      <StatusRow name="Chiller pump 1" status={data.vc1} alarm={data.cc1} />
-                      <StatusRow name="Chiller pump 2" status={data.vc2} alarm={data.cc2} />
-                      <StatusRow name="Chiller pump 3" status={data.vc3} alarm={data.cc3} />
+                      <StatusRow name="Chiller pump 1" status={data.cc1} alarm={data.cc1} />
+                      <StatusRow name="Chiller pump 2" status={data.cc2} alarm={data.cc2} />
+                      <StatusRow name="Chiller pump 3" status={data.cc3} alarm={data.cc3} />
                     </tbody>
                   </table>
                 </div>
@@ -274,23 +273,30 @@ const MetricRow = ({ label, value, unit }) => (
 );
 
 const StatusRow = ({ name, status, alarm }) => {
-  const isOff = status === "0" || status === 0;
-  const isNormal = alarm === "0" || alarm === 0;
-  
-  // Set default state as red if data is missing
-  const indicatorColor = (status === undefined || alarm === undefined) ? "bg-red-500" : (isNormal ? "bg-green-500" : "bg-red-500");
-  
+  const hasValue = (value) => value !== undefined && value !== null && value !== "";
+  const isZero = (value) => value === 0 || value === "0";
+
+  // Pump status: unchanged logic (0 -> OFF, non-zero -> ON)
+  const pumpLabel = !hasValue(status) ? "--" : isZero(status) ? "OFF" : "ON";
+
+  // Alarm indicator: prefer the alarm signal, fall back to the pump status
+  // alarm = 0 -> normal (green), alarm != 0 -> alarm (red)
+  // status = 0 -> OFF (red), status != 0 -> ON (green)
+  const useAlarm = hasValue(alarm);
+  const source = useAlarm ? alarm : status;
+  const available = hasValue(source);
+  const isOn = useAlarm ? isZero(source) : !isZero(source);
+
+  const indicatorColor = !available ? "bg-gray-300" : isOn ? "bg-green-500" : "bg-red-500";
+
   return (
     <tr className="font-sans">
       <td className="py-1.5 px-4 border border-gray-200 text-gray-700 font-medium text-[18px]">{name}</td>
       <td className="py-1.5 px-4 border border-gray-200 font-bold text-center uppercase text-[18px]">
-        {status !== undefined ? (isOff ? "OFF" : "ON") : "--"}
-      </td>
-      <td className={`py-1.5 px-4 border border-gray-200 text-center text-[18px] ${alarm !== undefined ? (isNormal ? "text-black" : "text-red-600") : "text-red-600"}`}>
-        {alarm !== undefined ? (isNormal ? "Normal" : "Warning") : "--"}
+        {pumpLabel}
       </td>
       <td className="py-1.5 px-4 border border-gray-200">
-        <div className={`w-3 h-3 rounded-full mx-auto ${indicatorColor} shadow-sm`} />
+        <div className={`w-3 h-3 rounded-full mx-auto flex-shrink-0 shadow-sm ${indicatorColor}`} />
       </td>
     </tr>
   );
