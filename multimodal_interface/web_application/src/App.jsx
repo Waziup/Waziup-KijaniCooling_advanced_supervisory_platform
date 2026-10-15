@@ -9,6 +9,8 @@ import Help from '../pages/help';
 import Notifications from '../pages/notifications';
 import Troubleshooting from '../pages/troubleshooting';
 import ReportsAndAnalytics from '../pages/reports'; // <-- 1. Imported the Reports page
+import ReportsLogistics from '../pages/reportsLogistics';
+import ReportsEnergy from '../pages/reportsEnergy';
 
 // Component imports
 import AddDevice from '../src/components/devices/AddDevice'; 
@@ -25,6 +27,8 @@ function App() {
         <Route path="/notifications" element={<Notifications />} />
         <Route path="/troubleshooting" element={<Troubleshooting />} /> 
         <Route path="/reports" element={<ReportsAndAnalytics />} /> {/* <-- 2. Added the Reports route here */}
+        <Route path="/reports/logistics" element={<ReportsLogistics />} />
+        <Route path="/reports/energy" element={<ReportsEnergy />} />
       </Routes>
     </Router>
   );
