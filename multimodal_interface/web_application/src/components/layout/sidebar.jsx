@@ -4,8 +4,8 @@ import { Menu, X } from 'lucide-react';
 import ReportsNavGroup from './ReportsNavGroup';
 
 const Sidebar = ({ activePage }) => {
-  // Below lg the sidebar is an off-canvas drawer. Each page mounts its own
-  // Sidebar, so navigating to another page closes the drawer automatically.
+  // Below lg the sidebar is an off-canvas drawer. AppLayout keys the Sidebar
+  // by path, so navigating to another page closes the drawer automatically.
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   useEffect(() => {

@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import Sidebar from "../src/components/layout/sidebar";
-import Header from "../src/components/layout/header";
-import Footer from "../src/components/layout/footer";
 import PerformanceCard from "../src/components/dashboard/PerformanceCard";
 import PerformanceTrendGraphs from "../src/components/dashboard/PerformanceTrendGraphs"; 
 import { SYSTEM_CONFIG } from "../src/utils/sensorMapping";
+import { usePageLayout } from "../src/components/layout/usePageLayout";
 
 const WAZIGATE_URL = import.meta.env.VITE_WAZIGATE_API_URL || 'http://127.0.0.1';
 
@@ -115,149 +113,138 @@ const Dashboard = () => {
     return () => clearInterval(interval);
   }, []);
 
+  usePageLayout("Dashboard", "dashboard");
+
   return (
-    <div className="flex flex-col h-screen overflow-hidden text-gray-900 font-sans">
-      <header className="h-16 min-h-[64px] max-h-[64px] w-full flex-shrink-0 border-b border-gray-200 z-10">
-        <Header title="Dashboard" />
-      </header>
-
-      <div className="flex flex-1 overflow-hidden">
-        <aside className="w-0 lg:w-[278px] flex-shrink-0 bg-white lg:border-r border-gray-200 overflow-y-auto">
-          <Sidebar activePage="dashboard" />
-        </aside>
-
-        <main className="flex-1 overflow-y-auto bg-gray-50 pt-0 pb-8 px-4 sm:pr-8 sm:pl-10">
-          <h2 className="text-[32px] font-bold text-gray-900 mb-[22px] tracking-wide mt-5">
-            System component
-          </h2>
-          <div className="flex flex-col xl:flex-row gap-8 xl:items-start">
-            
-            {/* Left Column: Fixed Width 428px from xl, full width (2-up on md) below */}
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-1 gap-6 w-full xl:w-[428px] xl:flex-shrink-0">
-              
-              {/* Biodigester Card */}
-              <div className="xl:h-[200px]">
-                <div className="w-full h-full bg-white rounded-xl border border-green-300 p-5 shadow-sm flex flex-col">
-                  <div className="flex justify-between items-start mb-0">
-                    <h3 className="text-[24px] font-bold text-gray-900 leading-none">Biodigester</h3>
-                    <div className="w-[120px] flex justify-center mt-[-4px]">
-                      <div className="p-1 rounded-full border border-green-200 shadow-sm">
-                        <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-                          <circle cx="12" cy="12" r="10"></circle>
-                          <path d="m12 12 3-3"></path>
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex flex-col flex-grow justify-start gap-1 mt-2.5">
-                    <MetricRow label="Biogas pressure" value={data.pi_06_3} unit="mbar" />
-                    <MetricRow label="Substrate Temp" value={data.ti_06_1} unit="°C" />
-                    <MetricRow label="Biogas Temp" value={data.ti_06_4} unit="°C" />
-                    <MetricRow label="Biomass level" value={data.lit_06} unit="% full" />
-                    <MetricRow label="Substrate flowrate" value={data.fit_04} unit="Kg/h" />
+    <div className="flex-1 bg-gray-50 pt-0 pb-8 px-4 sm:pr-8 sm:pl-10">
+      <h2 className="text-[32px] font-bold text-gray-900 mb-[22px] tracking-wide mt-5">
+        System component
+      </h2>
+      <div className="flex flex-col xl:flex-row gap-8 xl:items-start">
+        
+        {/* Left Column: Fixed Width 428px from xl, full width (2-up on md) below */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-1 gap-6 w-full xl:w-[428px] xl:flex-shrink-0">
+          
+          {/* Biodigester Card */}
+          <div className="xl:h-[200px]">
+            <div className="w-full h-full bg-white rounded-xl border border-green-300 p-5 shadow-sm flex flex-col">
+              <div className="flex justify-between items-start mb-0">
+                <h3 className="text-[24px] font-bold text-gray-900 leading-none">Biodigester</h3>
+                <div className="w-[120px] flex justify-center mt-[-4px]">
+                  <div className="p-1 rounded-full border border-green-200 shadow-sm">
+                    <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <path d="m12 12 3-3"></path>
+                    </svg>
                   </div>
                 </div>
               </div>
-
-              {/* Chiller Card */}
-              <div className="xl:h-[200px]">
-                <div className="w-full h-full bg-white rounded-xl border border-green-300 p-5 shadow-sm flex flex-col">
-                  <div className="flex justify-between items-start mb-0">
-                    <h3 className="text-[24px] font-bold text-gray-900 leading-none">Chiller</h3>
-                    <div className="w-[120px] flex justify-center mt-[-2px]">
-                      <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
-                        <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"></path>
-                      </svg>
-                    </div>
-                  </div>
-                  <div className="flex flex-col flex-grow justify-start gap-1 mt-2.5">
-                    <MetricRow label="Biogas flowrate" value={data.vg1} unit="m³/h" />
-                    <MetricRow label="Outlet temperature" value={data.th1} unit="°C" />
-                    <MetricRow label="Inlet temperature" value={data.th2} unit="°C" />
-                    <MetricRow label="Flow Rate" value={data.vc1} unit="L/min" />
-                    <MetricRow label="Pressure" value={data.pg1} unit="bar" />
-                  </div>
-                </div>
-              </div>
-
-            </div>
-
-            {/* Pump Status: Aligned Width 888px from xl, full width below */}
-            <div className="w-full min-w-0 xl:flex-1 xl:max-w-[888px] xl:h-[424px]">
-              <div className="w-full h-full bg-white rounded-xl border border-green-300 p-5 shadow-sm flex flex-col">
-                <h3 className="text-[24px] font-bold text-gray-800 mb-4 tracking-tight flex-shrink-0">Pump status</h3>
-                <div className="overflow-x-auto xl:overflow-hidden flex-grow flex flex-col">
-                  <table className="w-full text-left border-collapse">
-                    <thead className="bg-gray-50 font-bold text-black text-[18px]">
-                      <tr>
-                        <th className="py-1 px-4 border border-gray-200">Component</th>
-                        <th className="py-1 px-4 border border-gray-200 text-center">Status</th>
-                        <th className="py-1 px-4 border border-gray-200 text-center">Alarm</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <StatusRow name="Slurry pump" status={data.sl_02} alarm={data.al_02} />
-                      <StatusRow name="St - pump stirrer" status={data.si_03} alarm={data.al_03} />
-                      <StatusRow name="Feeding pump" status={data.si_02} alarm={data.al_02} />
-                      <StatusRow name="Digestate pump" status={data.si_07} alarm={data.al_07} />
-                      <StatusRow name="S-Recycle pump" status={data.si_06} alarm={data.al_06} />
-                      <StatusRow name="Chiller pump 1" status={data.cc1} alarm={data.cc1} />
-                      <StatusRow name="Chiller pump 2" status={data.cc2} alarm={data.cc2} />
-                      <StatusRow name="Chiller pump 3" status={data.cc3} alarm={data.cc3} />
-                    </tbody>
-                  </table>
-                </div>
+              <div className="flex flex-col flex-grow justify-start gap-1 mt-2.5">
+                <MetricRow label="Biogas pressure" value={data.pi_06_3} unit="mbar" />
+                <MetricRow label="Substrate Temp" value={data.ti_06_1} unit="°C" />
+                <MetricRow label="Biogas Temp" value={data.ti_06_4} unit="°C" />
+                <MetricRow label="Biomass level" value={data.lit_06} unit="% full" />
+                <MetricRow label="Substrate flowrate" value={data.fit_04} unit="Kg/h" />
               </div>
             </div>
-
           </div>
 
-          {/* Performance Section */}
-          <div className="mt-[20px]">
-            <h2 className="text-[32px] font-bold text-gray-900 mb-[22px] tracking-wide">
-              Weekly Performance Metrics
-            </h2>
-            
-            {/* 3-column grid structure perfectly matches the top row width */}
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 w-full max-w-[1348px]">
-              <PerformanceCard 
-                label="Energy Output" 
-                value={data.energy_output} 
-                unit="kWh" 
-                trend={3.2} 
-                icon="energy" 
-              />
-              <PerformanceCard 
-                label="Gas Production" 
-                value={data.gas_production} 
-                unit="m³/h" 
-                trend={-1.5} 
-                icon="production" 
-              />
-              <PerformanceCard 
-                label="Substrate Feeding Rate" 
-                value={data.substrate_feeding_rate ? Number(data.substrate_feeding_rate).toFixed(3) : undefined} 
-                unit="tons/h" 
-                trend={0.8} 
-                icon="feeding" 
-              />
+          {/* Chiller Card */}
+          <div className="xl:h-[200px]">
+            <div className="w-full h-full bg-white rounded-xl border border-green-300 p-5 shadow-sm flex flex-col">
+              <div className="flex justify-between items-start mb-0">
+                <h3 className="text-[24px] font-bold text-gray-900 leading-none">Chiller</h3>
+                <div className="w-[120px] flex justify-center mt-[-2px]">
+                  <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                    <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"></path>
+                  </svg>
+                </div>
+              </div>
+              <div className="flex flex-col flex-grow justify-start gap-1 mt-2.5">
+                <MetricRow label="Biogas flowrate" value={data.vg1} unit="m³/h" />
+                <MetricRow label="Outlet temperature" value={data.th1} unit="°C" />
+                <MetricRow label="Inlet temperature" value={data.th2} unit="°C" />
+                <MetricRow label="Flow Rate" value={data.vc1} unit="L/min" />
+                <MetricRow label="Pressure" value={data.pg1} unit="bar" />
+              </div>
             </div>
-            
-            {/* Performance Trend Graphs Section */}
-            <div className="mt-10">
-              <h2 className="text-[32px] font-bold text-gray-900 mb-[22px] tracking-wide">
-                Weekly Performance Trends
-              </h2>
-              <PerformanceTrendGraphs 
-                energyData={historicalData.energy} 
-                gasData={historicalData.gas} 
-              />
-            </div>
-            
           </div>
-        </main>
+
+        </div>
+
+        {/* Pump Status: Aligned Width 888px from xl, full width below */}
+        <div className="w-full min-w-0 xl:flex-1 xl:max-w-[888px] xl:h-[424px]">
+          <div className="w-full h-full bg-white rounded-xl border border-green-300 p-5 shadow-sm flex flex-col">
+            <h3 className="text-[24px] font-bold text-gray-800 mb-4 tracking-tight flex-shrink-0">Pump status</h3>
+            <div className="overflow-x-auto xl:overflow-hidden flex-grow flex flex-col">
+              <table className="w-full text-left border-collapse">
+                <thead className="bg-gray-50 font-bold text-black text-[18px]">
+                  <tr>
+                    <th className="py-1 px-4 border border-gray-200">Component</th>
+                    <th className="py-1 px-4 border border-gray-200 text-center">Status</th>
+                    <th className="py-1 px-4 border border-gray-200 text-center">Alarm</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <StatusRow name="Slurry pump" status={data.sl_02} alarm={data.al_02} />
+                  <StatusRow name="St - pump stirrer" status={data.si_03} alarm={data.al_03} />
+                  <StatusRow name="Feeding pump" status={data.si_02} alarm={data.al_02} />
+                  <StatusRow name="Digestate pump" status={data.si_07} alarm={data.al_07} />
+                  <StatusRow name="S-Recycle pump" status={data.si_06} alarm={data.al_06} />
+                  <StatusRow name="Chiller pump 1" status={data.cc1} alarm={data.cc1} />
+                  <StatusRow name="Chiller pump 2" status={data.cc2} alarm={data.cc2} />
+                  <StatusRow name="Chiller pump 3" status={data.cc3} alarm={data.cc3} />
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
       </div>
-      <Footer />
+
+      {/* Performance Section */}
+      <div className="mt-[20px]">
+        <h2 className="text-[32px] font-bold text-gray-900 mb-[22px] tracking-wide">
+          Weekly Performance Metrics
+        </h2>
+        
+        {/* 3-column grid structure perfectly matches the top row width */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 w-full max-w-[1348px]">
+          <PerformanceCard 
+            label="Energy Output" 
+            value={data.energy_output} 
+            unit="kWh" 
+            trend={3.2} 
+            icon="energy" 
+          />
+          <PerformanceCard 
+            label="Gas Production" 
+            value={data.gas_production} 
+            unit="m³/h" 
+            trend={-1.5} 
+            icon="production" 
+          />
+          <PerformanceCard 
+            label="Substrate Feeding Rate" 
+            value={data.substrate_feeding_rate ? Number(data.substrate_feeding_rate).toFixed(3) : undefined} 
+            unit="tons/h" 
+            trend={0.8} 
+            icon="feeding" 
+          />
+        </div>
+        
+        {/* Performance Trend Graphs Section */}
+        <div className="mt-10">
+          <h2 className="text-[32px] font-bold text-gray-900 mb-[22px] tracking-wide">
+            Weekly Performance Trends
+          </h2>
+          <PerformanceTrendGraphs 
+            energyData={historicalData.energy} 
+            gasData={historicalData.gas} 
+          />
+        </div>
+        
+      </div>
     </div>
   );
 };

@@ -1,46 +1,26 @@
 import React, { useState } from "react";
-import Sidebar from "../src/components/layout/sidebar";
-import Header from "../src/components/layout/header";
-import Footer from "../src/components/layout/footer";
+import { usePageLayout } from "../src/components/layout/usePageLayout";
 
 // --- MAIN HELP PAGE COMPONENT ---
 const Help = () => {
+  usePageLayout("Help", "help");
+
   return (
-    <div className="flex flex-col h-screen overflow-hidden text-gray-900 font-sans">
-      {/* Top Header */}
-      <header className="h-16 min-h-[64px] max-h-[64px] w-full flex-shrink-0 border-b border-gray-200 z-10 bg-white">
-        <Header title="Help" />
-      </header>
-
-      <div className="flex flex-1 overflow-hidden bg-[#eef0f4]">
-        {/* Sidebar */}
-        <aside className="w-0 lg:w-[278px] flex-shrink-0 bg-[#8bc389] lg:border-r border-gray-200 overflow-y-auto">
-          <Sidebar activePage="help" />
-        </aside>
-
-        {/* Main Content Area */}
-        <main className="flex-1 overflow-y-auto pt-6 pb-6 px-4 sm:px-8 relative">
-          
-          {/* Section 1: Frequently Asked Questions */}
-          <FAQSection />
-
-          {/* Section 2: Additional Resources */}
-          <AdditionalResources />
-
-          {/* Floating / Bottom Action Button */}
-          <div className="flex justify-end mt-8">
-            <button className="bg-[#fbcc05] hover:bg-yellow-500 text-gray-900 text-[18px] font-bold py-2 px-6 rounded-md border border-gray-800 shadow-sm transition-colors">
-              Go to Support Ticket
-            </button>
-          </div>
-
-        </main>
-      </div>
+    <div className="flex-1 bg-[#eef0f4] pt-6 pb-6 px-4 sm:px-8 relative">
       
-      {/* Footer reflecting the layout */}
-      <div className="bg-[#8bc389] h-8 flex items-center justify-center border-t border-green-600">
-        <span className="text-sm text-gray-800 font-medium">© 2026 Device Manager. All rights reserved.</span>
+      {/* Section 1: Frequently Asked Questions */}
+      <FAQSection />
+
+      {/* Section 2: Additional Resources */}
+      <AdditionalResources />
+
+      {/* Floating / Bottom Action Button */}
+      <div className="flex justify-end mt-8">
+        <button className="bg-[#fbcc05] hover:bg-yellow-500 text-gray-900 text-[18px] font-bold py-2 px-6 rounded-md border border-gray-800 shadow-sm transition-colors">
+          Go to Support Ticket
+        </button>
       </div>
+
     </div>
   );
 };
