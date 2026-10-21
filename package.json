@@ -4,15 +4,5 @@
 	"description": "Digital management application for the KijaniCooling Application Solution Boxes.",
 	"private": false,
 	"author": "Waziup",
-	"license": "NA",
-	"waziapp": {
-		"icon": "ui/icon.svg",
-		"menu": {
-			"IrrigationPrediction": {
-				"primary": "KijaniCooling supervisory platform",
-				"icon": "ui/menu-icon.svg",
-				"href": "#/apps/waziup.kijanicooling-supervisory-platform/ui/"
-			}
-		}
-	}
+	"license": "NA"
 }
