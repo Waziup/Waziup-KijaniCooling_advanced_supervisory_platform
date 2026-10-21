@@ -37,12 +37,12 @@ export default function Troubleshooting() {
 
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
-        <aside className="w-64 flex-shrink-0 z-20">
+        <aside className="w-0 lg:w-64 flex-shrink-0 z-20">
           <Sidebar activePage="Troubleshooting" />
         </aside>
 
         {/* Main Scrolling Area */}
-        <main className="flex-1 overflow-y-auto bg-[#E5E7EB] pt-6 px-8 pb-8 relative z-10">
+        <main className="flex-1 overflow-y-auto bg-[#E5E7EB] pt-6 px-4 sm:px-8 pb-8 relative z-10">
           
           <div className="w-full flex flex-col">
             
@@ -103,7 +103,7 @@ export default function Troubleshooting() {
               
               <div className="w-full bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                 <div className="overflow-x-auto">
-                  <table className="w-full text-left border-collapse table-fixed">
+                  <table className="w-full min-w-[800px] lg:min-w-0 text-left border-collapse table-fixed">
                     <thead className="bg-white border-b border-gray-200">
                       {/* Dashboard equivalent text-[18px] */}
                       <tr className="font-bold text-gray-900 text-[18px]">

@@ -14,12 +14,12 @@ const Help = () => {
 
       <div className="flex flex-1 overflow-hidden bg-[#eef0f4]">
         {/* Sidebar */}
-        <aside className="w-[278px] flex-shrink-0 bg-[#8bc389] border-r border-gray-200 overflow-y-auto">
+        <aside className="w-0 lg:w-[278px] flex-shrink-0 bg-[#8bc389] lg:border-r border-gray-200 overflow-y-auto">
           <Sidebar activePage="help" />
         </aside>
 
         {/* Main Content Area */}
-        <main className="flex-1 overflow-y-auto pt-6 pb-6 pr-8 pl-8 relative">
+        <main className="flex-1 overflow-y-auto pt-6 pb-6 px-4 sm:px-8 relative">
           
           {/* Section 1: Frequently Asked Questions */}
           <FAQSection />
@@ -81,8 +81,8 @@ const FAQSection = () => {
       <h2 className="text-[32px] font-bold text-gray-900 mb-4 tracking-wide">
         Frequently Asked Questions
       </h2>
-      {/* Changed w-1/2 to w-3/4 to increase the width to three-quarters */}
-      <div className="flex flex-col gap-2 w-3/4">
+      {/* Three-quarters width on desktop, full width below lg */}
+      <div className="flex flex-col gap-2 w-full lg:w-3/4">
         {faqs.map((faq) => (
           <div key={faq.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
             <button 

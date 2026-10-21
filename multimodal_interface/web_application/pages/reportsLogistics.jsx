@@ -27,7 +27,7 @@ export default function ReportsLogistics() {
       </header>
 
       <div className="flex flex-1 overflow-hidden">
-        <aside className="w-64 flex-shrink-0 z-20">
+        <aside className="w-0 lg:w-64 flex-shrink-0 z-20">
           <Sidebar activePage="Reports & Analytics" />
         </aside>
 

@@ -132,21 +132,21 @@ const DeviceManagement = () => {
       </header>
 
       <div className="flex flex-1 overflow-hidden">
-        <aside className="w-[256px] flex-shrink-0 bg-white border-r border-gray-200 overflow-y-auto">
+        <aside className="w-0 lg:w-[256px] flex-shrink-0 bg-white lg:border-r border-gray-200 overflow-y-auto">
           <Sidebar activePage="Device Management" />
         </aside>
         
-        <main className="flex-1 overflow-y-auto bg-[#E5E7EB] pt-0 px-8 pb-8 relative">
+        <main className="flex-1 overflow-y-auto bg-[#E5E7EB] pt-0 px-4 sm:px-8 pb-8 relative">
           
           <div className="w-full">
             <h2 className="text-[32px] font-bold text-gray-900 mt-0 mb-1 tracking-wide">Device Management</h2>
             <p className="text-gray-600 mb-6 text-[15px]">Manage and monitor all registered devices within your infrastructure.</p>
 
             {/* Action Bar */}
-            <div className="flex w-full justify-between items-center gap-4 mb-4">
+            <div className="flex flex-col sm:flex-row w-full justify-between sm:items-center gap-3 sm:gap-4 mb-4">
               
               {/* Search bar */}
-              <div className="relative flex-1 bg-white rounded-md shadow-sm">
+              <div className="relative w-full sm:flex-1 bg-white rounded-md shadow-sm">
                 <span className="absolute inset-y-0 left-3 flex items-center text-gray-400">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                 </span>
@@ -167,7 +167,7 @@ const DeviceManagement = () => {
               </div>
 
               {/* Right Group: Filters and Add Device */}
-              <div className="flex items-center gap-3 flex-shrink-0">
+              <div className="flex flex-wrap items-center justify-end gap-3 flex-shrink-0">
                 
                 {/* Filter Popover Container */}
                 <div className="relative" ref={filterRef}>
@@ -180,7 +180,7 @@ const DeviceManagement = () => {
                   </button>
 
                   {isFilterOpen && (
-                    <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-xl z-50 py-2 origin-top-right">
+                    <div className="absolute left-0 sm:left-auto sm:right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-xl z-50 py-2 origin-top-right">
                       <div className="px-4 py-2 text-[11px] font-bold text-gray-400 uppercase tracking-widest">Device Type</div>
                       {['All', 'Sensor', 'Pump', 'Valve', 'Alarm'].map((type) => (
                         <button 
@@ -214,7 +214,7 @@ const DeviceManagement = () => {
             {/* Table Container */}
             <div className="w-full bg-white rounded-xl border border-gray-300 shadow-sm overflow-hidden flex flex-col">
               <div className="overflow-x-auto min-h-[400px]">
-                <table className="w-full text-left border-collapse table-fixed">
+                <table className="w-full min-w-[720px] lg:min-w-0 text-left border-collapse table-fixed">
                   <thead className="bg-gray-50/50">
                     <tr className="text-gray-900 font-['Inter'] font-medium text-[20px] border-b border-gray-300">
                       <th className="py-3 px-4 pl-6 w-[34%]">Device Name</th>
@@ -255,7 +255,7 @@ const DeviceManagement = () => {
               </div>
 
               {filteredDevices.length > itemsPerPage && (
-                <div className="px-6 py-3 border-t border-gray-200 bg-gray-50/50 flex items-center justify-between">
+                <div className="px-4 sm:px-6 py-3 border-t border-gray-200 bg-gray-50/50 flex flex-wrap items-center justify-between gap-2">
                   <span className="text-[13px] text-gray-600">Showing <span className="font-semibold text-gray-900">{indexOfFirstItem + 1}</span> to <span className="font-semibold text-gray-900">{Math.min(indexOfLastItem, filteredDevices.length)}</span> of <span className="font-semibold text-gray-900">{filteredDevices.length}</span> devices</span>
                   
                   <div className="flex items-center border border-blue-400 rounded-sm bg-white overflow-hidden shadow-sm">

@@ -35,15 +35,15 @@ const AddDevice = () => {
       </header>
 
       <div className="flex flex-1 overflow-hidden">
-        <aside className="w-[256px] flex-shrink-0 bg-white border-r border-gray-200 overflow-y-auto">
+        <aside className="w-0 lg:w-[256px] flex-shrink-0 bg-white lg:border-r border-gray-200 overflow-y-auto">
           <Sidebar activePage="Device Management" />
         </aside>
 
-        <main className="flex-1 overflow-y-auto bg-[#E5E7EB] p-8">
-          <div className="w-full pr-8">
+        <main className="flex-1 overflow-y-auto bg-[#E5E7EB] p-4 sm:p-8">
+          <div className="w-full sm:pr-8">
             
             {/* White Card Container */}
-            <div className="bg-white rounded-lg border border-gray-300 shadow-sm p-8">
+            <div className="bg-white rounded-lg border border-gray-300 shadow-sm p-4 sm:p-8">
               <h2 className="text-[18px] font-semibold text-gray-800 mb-8">Device Information</h2>
 
               <form onSubmit={handleSubmit}>

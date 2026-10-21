@@ -36,7 +36,7 @@ function SettingsPage() {
         <Sidebar activePage="Settings" />
 
         {/* Main Content Area - CHANGED pb-24 to pb-12 to remove unnecessary empty space */}
-        <main className="flex-1 pt-6 pb-12 pr-12 pl-12 overflow-y-auto flex flex-col ml-[265px]">
+        <main className="flex-1 pt-6 pb-12 px-4 sm:px-12 overflow-y-auto flex flex-col lg:ml-[265px]">
           
           <div className="flex flex-col gap-6 w-full flex-1">
             
@@ -204,7 +204,7 @@ function SettingsPage() {
         </main>
 
         {/* Fixed Footer */}
-        <div className="fixed bottom-0 left-[265px] right-0 z-30 bg-[#8bc389] border-t border-green-600 h-8 flex items-center justify-center">
+        <div className="fixed bottom-0 left-0 lg:left-[265px] right-0 z-30 bg-[#8bc389] border-t border-green-600 h-8 flex items-center justify-center">
           <span className="text-sm text-gray-800 font-medium">© 2026 Device Manager. All rights reserved.</span>
         </div>
 

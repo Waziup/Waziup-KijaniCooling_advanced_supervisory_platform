@@ -122,21 +122,21 @@ const Dashboard = () => {
       </header>
 
       <div className="flex flex-1 overflow-hidden">
-        <aside className="w-[278px] flex-shrink-0 bg-white border-r border-gray-200 overflow-y-auto">
+        <aside className="w-0 lg:w-[278px] flex-shrink-0 bg-white lg:border-r border-gray-200 overflow-y-auto">
           <Sidebar activePage="dashboard" />
         </aside>
 
-        <main className="flex-1 overflow-y-auto bg-gray-50 pt-0 pb-8 pr-8 pl-10">
+        <main className="flex-1 overflow-y-auto bg-gray-50 pt-0 pb-8 px-4 sm:pr-8 sm:pl-10">
           <h2 className="text-[32px] font-bold text-gray-900 mb-[22px] tracking-wide mt-5">
             System component
           </h2>
-          <div className="flex gap-8 items-start">
+          <div className="flex flex-col xl:flex-row gap-8 xl:items-start">
             
-            {/* Left Column: Fixed Width 428px */}
-            <div className="flex flex-col gap-6 w-[428px]">
+            {/* Left Column: Fixed Width 428px from xl, full width (2-up on md) below */}
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-1 gap-6 w-full xl:w-[428px] xl:flex-shrink-0">
               
               {/* Biodigester Card */}
-              <div className="h-[200px]">
+              <div className="xl:h-[200px]">
                 <div className="w-full h-full bg-white rounded-xl border border-green-300 p-5 shadow-sm flex flex-col">
                   <div className="flex justify-between items-start mb-0">
                     <h3 className="text-[24px] font-bold text-gray-900 leading-none">Biodigester</h3>
@@ -160,7 +160,7 @@ const Dashboard = () => {
               </div>
 
               {/* Chiller Card */}
-              <div className="h-[200px]">
+              <div className="xl:h-[200px]">
                 <div className="w-full h-full bg-white rounded-xl border border-green-300 p-5 shadow-sm flex flex-col">
                   <div className="flex justify-between items-start mb-0">
                     <h3 className="text-[24px] font-bold text-gray-900 leading-none">Chiller</h3>
@@ -182,17 +182,17 @@ const Dashboard = () => {
 
             </div>
 
-            {/* Pump Status: Aligned Width 888px */}
-            <div className="w-[888px] h-[424px]">
+            {/* Pump Status: Aligned Width 888px from xl, full width below */}
+            <div className="w-full min-w-0 xl:flex-1 xl:max-w-[888px] xl:h-[424px]">
               <div className="w-full h-full bg-white rounded-xl border border-green-300 p-5 shadow-sm flex flex-col">
                 <h3 className="text-[24px] font-bold text-gray-800 mb-4 tracking-tight flex-shrink-0">Pump status</h3>
-                <div className="overflow-hidden flex-grow flex flex-col">
+                <div className="overflow-x-auto xl:overflow-hidden flex-grow flex flex-col">
                   <table className="w-full text-left border-collapse">
                     <thead className="bg-gray-50 font-bold text-black text-[18px]">
                       <tr>
-                        <th className="py-1.5 px-4 border border-gray-200">Component</th>
-                        <th className="py-1.5 px-4 border border-gray-200 text-center">Status</th>
-                        <th className="py-1.5 px-4 border border-gray-200 text-center">Alarm</th>
+                        <th className="py-1 px-4 border border-gray-200">Component</th>
+                        <th className="py-1 px-4 border border-gray-200 text-center">Status</th>
+                        <th className="py-1 px-4 border border-gray-200 text-center">Alarm</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -219,7 +219,7 @@ const Dashboard = () => {
             </h2>
             
             {/* 3-column grid structure perfectly matches the top row width */}
-            <div className="grid grid-cols-3 gap-8 w-[1348px]">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 w-full max-w-[1348px]">
               <PerformanceCard 
                 label="Energy Output" 
                 value={data.energy_output} 
@@ -291,11 +291,11 @@ const StatusRow = ({ name, status, alarm }) => {
 
   return (
     <tr className="font-sans">
-      <td className="py-1.5 px-4 border border-gray-200 text-gray-700 font-medium text-[18px]">{name}</td>
-      <td className="py-1.5 px-4 border border-gray-200 font-bold text-center uppercase text-[18px]">
+      <td className="py-1 px-4 border border-gray-200 text-gray-700 font-medium text-[18px]">{name}</td>
+      <td className="py-1 px-4 border border-gray-200 font-bold text-center uppercase text-[18px]">
         {pumpLabel}
       </td>
-      <td className="py-1.5 px-4 border border-gray-200">
+      <td className="py-1 px-4 border border-gray-200">
         <div className={`w-3 h-3 rounded-full mx-auto flex-shrink-0 shadow-sm ${indicatorColor}`} />
       </td>
     </tr>

@@ -68,16 +68,16 @@ export default function Notifications() {
       </header>
 
       <div className="flex flex-1 overflow-hidden">
-        <aside className="w-64 flex-shrink-0 z-20">
+        <aside className="w-0 lg:w-64 flex-shrink-0 z-20">
           <Sidebar activePage="Notifications" />
         </aside>
 
-        <main className="flex-1 flex flex-col overflow-hidden bg-[#E5E7EB] pt-6 px-8 pb-1 relative z-10">
+        <main className="flex-1 flex flex-col overflow-y-auto bg-[#E5E7EB] pt-6 px-4 sm:px-8 pb-1 relative z-10">
           
           {/* Action Bar */}
-          <div className="flex w-full justify-between items-center gap-4 mb-4 flex-shrink-0">
+          <div className="flex flex-col sm:flex-row w-full justify-between sm:items-center gap-3 sm:gap-4 mb-4 flex-shrink-0">
             
-            <div className="relative flex-1 bg-white rounded-md shadow-sm border border-gray-300 h-11">
+            <div className="relative w-full sm:flex-1 bg-white rounded-md shadow-sm border border-gray-300 h-11 flex-shrink-0">
               <span className="absolute inset-y-0 left-3 flex items-center text-gray-400">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
               </span>
@@ -90,7 +90,7 @@ export default function Notifications() {
               />
             </div>
 
-            <div className="flex items-center gap-3 flex-shrink-0">
+            <div className="flex flex-wrap items-center justify-end gap-3 flex-shrink-0">
               {/* Severity Dropdown */}
               <div className="relative" ref={severityRef}>
                 <button 
@@ -101,7 +101,7 @@ export default function Notifications() {
                   Severity{selectedSeverity !== "All" && `: ${selectedSeverity}`}
                 </button>
                 {isSeverityOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-xl z-50 py-2 origin-top-right">
+                  <div className="absolute left-0 sm:left-auto sm:right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-xl z-50 py-2 origin-top-right">
                     {['All', 'Critical', 'Medium', 'Low'].map((level) => (
                       <button key={level} onClick={() => { setSelectedSeverity(level); setIsSeverityOpen(false); }} className={`w-full text-left px-4 py-2 text-[14px] hover:bg-gray-50 flex items-center justify-between ${selectedSeverity === level ? 'text-indigo-600 font-semibold' : 'text-gray-700'}`}>
                         {level} {selectedSeverity === level && <div className="w-2 h-2 bg-[#F8D300] rounded-full"></div>}
@@ -134,11 +134,11 @@ export default function Notifications() {
           </div> 
 
           {/* Table Container */}
-          <div className="w-full bg-white rounded-xl border border-gray-300 shadow-sm overflow-hidden flex flex-col flex-1">
+          <div className="w-full bg-white rounded-xl border border-gray-300 shadow-sm overflow-hidden flex flex-col flex-1 min-h-[320px]">
             
             <div className="overflow-auto flex-1">
               {/* ADDED h-full to the table element to evenly distribute vertical space to the rows */}
-              <table className="w-full h-full text-left border-collapse table-fixed">
+              <table className="w-full min-w-[640px] lg:min-w-0 h-full text-left border-collapse table-fixed">
                 <thead className="bg-white border-b border-gray-200 sticky top-0 z-10">
                   <tr className="font-bold text-gray-900 text-[16px]">
                     <th className="py-4 px-4 pl-6 w-[20%]">Alert ID</th>
@@ -181,7 +181,7 @@ export default function Notifications() {
 
             {/* Pagination Footer */}
             {filteredNotifications.length > 0 && (
-              <div className="px-6 py-3 border-t border-gray-200 bg-white flex items-center justify-between flex-shrink-0">
+              <div className="px-4 sm:px-6 py-3 border-t border-gray-200 bg-white flex flex-wrap items-center justify-between gap-2 flex-shrink-0">
                 <span className="text-[13px] text-gray-600">
                   Showing <strong className="font-semibold text-gray-900">1</strong> to <strong className="font-semibold text-gray-900">{Math.min(10, filteredNotifications.length)}</strong> of <strong className="font-semibold text-gray-900">{notifications.length}</strong> alerts
                 </span>

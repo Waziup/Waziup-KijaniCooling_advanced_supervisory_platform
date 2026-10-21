@@ -13,14 +13,14 @@ export default function ReportsAndAnalytics() {
 
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
-        <aside className="w-64 flex-shrink-0 z-20">
+        <aside className="w-0 lg:w-64 flex-shrink-0 z-20">
           <Sidebar activePage="Reports & Analytics" />
         </aside>
 
         {/* Main Area: Changed pt-5 to pt-0 to remove the space before Overview Metrics */}
-        <main className="flex-1 flex flex-col overflow-y-auto bg-[#E5E7EB] pt-0 pr-12 pb-5 pl-6 relative z-10">
+        <main className="flex-1 flex flex-col overflow-y-auto bg-[#E5E7EB] pt-0 px-4 sm:pr-12 sm:pl-6 pb-5 relative z-10">
           
-          <div className="w-full max-w-[1600px] h-full flex flex-col gap-3">
+          <div className="w-full max-w-[1600px] lg:h-full flex flex-col gap-3">
             
             {/* Section 1: Overview Metrics */}
             <section className="flex-shrink-0">
@@ -28,7 +28,7 @@ export default function ReportsAndAnalytics() {
                 Overview Metrics
               </h2>
               
-              <div className="grid grid-cols-1 md:grid-cols-5 gap-4 w-full">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 w-full">
                 {/* Metric 1 */}
                 <div className="bg-white rounded-xl p-5 shadow-sm border border-green-300 flex flex-col justify-between">
                   <div className="flex justify-between items-start mb-2">
@@ -114,7 +114,7 @@ export default function ReportsAndAnalytics() {
                 {/* Line Chart Card - Updated Border */}
                 <div className="bg-white rounded-xl shadow-sm border border-green-300 p-5 flex flex-col h-full">
                   <h3 className="text-[24px] font-bold text-gray-900 leading-none mb-4">Alert Frequency</h3>
-                  <div className="flex-1 relative w-full h-full flex flex-col justify-between">
+                  <div className="flex-1 relative w-full h-full min-h-[180px] lg:min-h-0 flex flex-col justify-between">
                     <div className="absolute left-0 top-0 h-[85%] flex flex-col justify-between text-[12px] font-medium text-gray-500">
                       <span>40</span><span>30</span><span>20</span><span>10</span><span>0</span>
                     </div>
@@ -146,7 +146,7 @@ export default function ReportsAndAnalytics() {
                 {/* Area Chart Card - Updated Border */}
                 <div className="bg-white rounded-xl shadow-sm border border-green-300 p-5 flex flex-col h-full">
                   <h3 className="text-[24px] font-bold text-gray-900 leading-none mb-4">Biogas Trend</h3>
-                  <div className="flex-1 relative w-full h-full flex flex-col justify-between">
+                  <div className="flex-1 relative w-full h-full min-h-[180px] lg:min-h-0 flex flex-col justify-between">
                     <div className="absolute left-0 top-0 h-[85%] flex flex-col justify-between text-[12px] font-medium text-gray-500">
                       <span>160</span><span>120</span><span>80</span><span>40</span><span>0</span>
                     </div>
@@ -181,7 +181,7 @@ export default function ReportsAndAnalytics() {
                 {/* Bar Chart Card - Updated Border */}
                 <div className="bg-white rounded-xl shadow-sm border border-green-300 p-5 flex flex-col h-full">
                   <h3 className="text-[24px] font-bold text-gray-900 leading-none mb-4">Severity Breakdown</h3>
-                  <div className="flex-1 relative w-full h-full flex flex-col justify-between pt-1">
+                  <div className="flex-1 relative w-full h-full min-h-[180px] lg:min-h-0 flex flex-col justify-between pt-1">
                     <div className="absolute left-0 top-1 h-[80%] flex flex-col justify-between text-[12px] font-medium text-gray-500">
                       <span>160</span><span>120</span><span>80</span><span>40</span><span>0</span>
                     </div>
