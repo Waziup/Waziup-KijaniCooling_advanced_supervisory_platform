@@ -22,8 +22,7 @@ services:
       context: ./multimodal_interface/web_application
       dockerfile: Dockerfile
       args:
-        #VITE_WAZIGATE_API_URL: "http://localhost"
-        VITE_WAZIGATE_API_URL: "http://wazigate-dashboard.staging.waziup.io" # FOR STAGING GA
+        VITE_WAZIGATE_API_URL: "http://localhost"
     image: waziup/kijanicooling-frontend:latest
     container_name: waziup.kijanicooling-frontend
     ports:
