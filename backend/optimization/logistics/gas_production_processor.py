@@ -47,7 +47,7 @@ def process_gas_production(sensor_values, config):
             print(f"[GAS PRODUCTION PROCESSOR] Error: device_id not set for {metrics_device_name}")
             return False
         
-        sensor_id = metrics_device.get("sensors", {}).get("gas_production")
+        sensor_id = metrics_device.get("sensors", {}).get("gas_production", {}).get("wazigate_id")
         if not sensor_id:
             print(f"[GAS PRODUCTION PROCESSOR] Error: gas_production sensor_id not found in config")
             return False

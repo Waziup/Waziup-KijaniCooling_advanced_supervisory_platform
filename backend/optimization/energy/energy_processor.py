@@ -47,7 +47,7 @@ def process_energy_output(sensor_values, config):
             print(f"[ENERGY PROCESSOR] Error: device_id not set for {metrics_device_name}")
             return False
         
-        sensor_id = metrics_device.get("sensors", {}).get("energy_output")
+        sensor_id = metrics_device.get("sensors", {}).get("energy_output", {}).get("wazigate_id")
         if not sensor_id:
             print(f"[ENERGY PROCESSOR] Error: energy_output sensor_id not found in config")
             return False

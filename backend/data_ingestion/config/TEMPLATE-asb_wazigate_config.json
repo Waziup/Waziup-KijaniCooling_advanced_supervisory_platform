@@ -1,0 +1,345 @@
+{
+    "asb_name": "",
+    "devices": {
+        "KijaniCooling ASB-biodigester": {
+            "device_id": "",
+            "sensors": {
+                "si_01": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "al_01": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "wi_02": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "si_02": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "al_02": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "hoa_02": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "si_03": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "al_03": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "ki_03": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "li_03": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "fsdl_03": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "fsdh_03": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "ki_04": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "j_04": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "hoa_01": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "fit_04": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "ti_06_1": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "ti_06_2": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "ty_06": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "lit_06": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "lahh_06": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "lah_06": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "lal_06": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "ti_06_4": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "pi_06_3": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "pi_11": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "pi_14": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "ti_14": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "fit_13": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "si_07": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "al_07": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "hoa_07": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "ki_07": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "j_07": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "lsdh_07": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "si_06": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "al_06": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "ti_15": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "ti_16": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                }
+            }
+        },
+        "KijaniCooling ASB-chiller": {
+            "device_id": "",
+            "sensors": {
+                "vg1": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "vh1": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "vc1": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "vc2": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "pc1": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "pg1": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "tg1": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "th1": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "th2": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "th3": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "th4": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "tc1": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "tc2": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "tc3": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "tc4": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "tc5": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "tc6": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "tc7": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "tc8": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "tc9": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "ch1": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "cc1": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "cc2": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                }
+            }
+        },
+        "KijaniCooling ASB metrics": {
+            "device_id": "",
+            "sensors": {
+                "energy_output": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "gas_production": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                },
+                "substrate_feeding_rate": {
+                    "name": "",
+                    "type": "",
+                    "wazigate_id": ""
+                }
+            }
+        }
+    }
+}

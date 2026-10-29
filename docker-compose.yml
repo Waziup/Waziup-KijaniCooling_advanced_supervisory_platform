@@ -19,10 +19,11 @@ services:
 
   frontend:
     build:
-      context: ./multimodal_interface/web_application
+      context: ./frontend/web_application
       dockerfile: Dockerfile
       args:
-        VITE_WAZIGATE_API_URL: "http://localhost"
+        #VITE_WAZIGATE_API_URL: "http://localhost" # When running on a WaziGate
+        VITE_WAZIGATE_API_URL: "http://wazigate-dashboard.staging.waziup.io/" # For staging Web UI
     image: waziup/kijanicooling-frontend:latest
     container_name: waziup.kijanicooling-frontend
     ports:

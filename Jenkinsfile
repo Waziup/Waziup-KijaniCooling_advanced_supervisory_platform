@@ -74,7 +74,7 @@ pipeline {
                             --pull \\
                             --build-arg CACHEBUST=\$(date +%s) \\
                             --build-arg VITE_WAZIGATE_API_URL=http://localhost \\
-                            --load -f ./multimodal_interface/web_application/Dockerfile ./multimodal_interface/web_application
+                            --load -f ./frontend/web_application/Dockerfile ./frontend/web_application
                     """
                 }
             }

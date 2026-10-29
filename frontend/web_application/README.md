@@ -30,7 +30,7 @@ git clone https://github.com/Waziup/Waziup-KijaniCooling_advanced_supervisory_pl
 Change your directory into the specific web application folder.
 
 ```
-cd Waziup-KijaniCooling_advanced_supervisory_platform\multimodal_interface\web-application
+cd Waziup-KijaniCooling_advanced_supervisory_platform\frontend\web-application
 
 ```
 

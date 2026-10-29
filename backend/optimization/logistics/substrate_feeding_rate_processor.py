@@ -47,7 +47,7 @@ def process_substrate_feeding_rate(sensor_values, config):
             print(f"[SUBSTRATE FEEDING RATE PROCESSOR] Error: device_id not set for {metrics_device_name}")
             return False
         
-        sensor_id = metrics_device.get("sensors", {}).get("substrate_feeding_rate")
+        sensor_id = metrics_device.get("sensors", {}).get("substrate_feeding_rate", {}).get("wazigate_id")
         if not sensor_id:
             print(f"[SUBSTRATE FEEDING RATE PROCESSOR] Error: substrate_feeding_rate sensor_id not found in config")
             return False
