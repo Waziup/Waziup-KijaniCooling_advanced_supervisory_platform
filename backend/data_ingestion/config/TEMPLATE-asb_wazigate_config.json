@@ -1,5 +1,6 @@
 {
     "asb_name": "",
+    "gas_production_target": 75,
     "devices": {
         "KijaniCooling ASB-biodigester": {
             "device_id": "",

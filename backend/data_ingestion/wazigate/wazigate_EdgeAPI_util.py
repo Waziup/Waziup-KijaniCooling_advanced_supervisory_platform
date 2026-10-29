@@ -14,6 +14,7 @@ BASE_PATH = os.path.dirname(os.path.abspath(__file__))
 JSON_FILE = os.path.normpath(os.path.join(BASE_PATH, "..", "config", "asb_wazigate_config.json"))
 WAZIGATE_TOKEN_FILE = os.path.join(BASE_PATH, "..", "config", "wazigate_token.txt")
 REQUEST_TIMEOUT = 10 # in seconds
+HISTORY_REQUEST_TIMEOUT = 60 # in seconds, value history can be large
 
 def renew_wazigate_token():
     # Fetch new token from WaziGate and store it in .txt file (for now..)
@@ -35,15 +36,16 @@ def renew_wazigate_token():
 
 def wazigate_request(method, path, **kwargs):
     # Send an authenticated request to WaziGate, renewing the token once if it has expired
+    kwargs.setdefault("timeout", REQUEST_TIMEOUT)
     token = get_wazigate_token()
     if not token: # renew token if not saved
         token = renew_wazigate_token()
-    r = requests.request(method, f"{WAZIGATE_URL}{path}", headers=wazigate_auth_headers(token), timeout=REQUEST_TIMEOUT, **kwargs)
+    r = requests.request(method, f"{WAZIGATE_URL}{path}", headers=wazigate_auth_headers(token), **kwargs)
     # check if unauthorized, refresh token and retry
     if r.status_code == 401:
         print("[WAZIGATE EDGE UTIL] Auth token expired, refetching...")
         token = renew_wazigate_token()
-        r = requests.request(method, f"{WAZIGATE_URL}{path}", headers=wazigate_auth_headers(token), timeout=REQUEST_TIMEOUT, **kwargs)
+        r = requests.request(method, f"{WAZIGATE_URL}{path}", headers=wazigate_auth_headers(token), **kwargs)
     return r
 
 def get_devices():
@@ -58,6 +60,17 @@ def get_device(device_id):
     if r.status_code != 200:
         raise Exception(f"[WAZIGATE EDGE UTIL] Failed to GET device '{device_id}': {r.status_code} {r.text}")
     return r.json()
+
+def get_sensor_values(device_id, sensor_id, from_time, to_time):
+    # Returns the sensor value history between two datetimes, as a list of {"value": .., "time": ".."}
+    params = {
+        "from": from_time.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "to": to_time.strftime("%Y-%m-%dT%H:%M:%SZ")
+    }
+    r = wazigate_request("GET", f"/devices/{device_id}/sensors/{sensor_id}/values", params=params, timeout=HISTORY_REQUEST_TIMEOUT)
+    if r.status_code != 200:
+        raise Exception(f"[WAZIGATE EDGE UTIL] Failed to GET values of sensor '{sensor_id}': {r.status_code} {r.text}")
+    return r.json() or []
 
 def create_device(name):
     # Creates a device on WaziGate and returns its ID

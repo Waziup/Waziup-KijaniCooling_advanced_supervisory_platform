@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import PerformanceCard from "../src/components/dashboard/PerformanceCard";
 import PerformanceTrendGraphs from "../src/components/dashboard/PerformanceTrendGraphs"; 
 import { usePageLayout } from "../src/components/layout/usePageLayout";
@@ -9,19 +9,19 @@ const DASHBOARD_API_URL = `${(import.meta.env.VITE_BACKEND_API_URL || "").replac
 
 const Dashboard = () => {
   const [data, setData] = useState({});
-  const dataRef = useRef(data); 
-  
-  // STATE: For real-time rolling chart data (last 7 readings)
-  const [historicalData, setHistoricalData] = useState({
-    energy: [],
-    gas: []
-  });
 
-  useEffect(() => {
-    dataRef.current = data;
-  }, [data]);
+  // Weekly trends (daily averages of the last 7 days) and gas production target come from the API
+  const historicalData = useMemo(() => {
+    const trends = data.weekly_trends || [];
+    const target = data.gas_production_target ?? null;
+    return {
+      energy: trends.map((d) => ({ timeLabel: d.day, output: d.ENERGY_OUTPUT })),
+      gas: trends.map((d) => ({ timeLabel: d.day, actual: d.GAS_PRODUCTION, target }))
+    };
+  }, [data.weekly_trends, data.gas_production_target]);
+  const weeklyChange = data.weekly_change || {};
 
-  // EFFECT 1: Fetch live instantaneous data from the backend every 2 seconds
+  // Fetch live data from the backend every 2 seconds
   useEffect(() => {
     const fetchAllSensors = async () => {
       try {
@@ -50,35 +50,6 @@ const Dashboard = () => {
 
     fetchAllSensors();
     const interval = setInterval(fetchAllSensors, 2000); 
-    return () => clearInterval(interval);
-  }, []);
-
-  // EFFECT 2: Rolling Window for Graph Data (Updates every 20 seconds)
-  useEffect(() => {
-    const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-    let dayIndex = 0; 
-
-    const updateGraph = () => {
-      setHistoricalData((prev) => {
-        const latestData = dataRef.current;
-        
-        // Use raw values so empty data passes cleanly into charts (avoiding static fallbacks)
-        const currentEnergy = Number(latestData.energy_output) || 0; 
-        const currentGas = Number(latestData.gas_production) || 0;
-        
-        const currentDay = daysOfWeek[dayIndex % 7];
-        dayIndex++;
-
-        return {
-          energy: [...prev.energy, { timeLabel: currentDay, output: currentEnergy }].slice(-7),
-          gas: [...prev.gas, { timeLabel: currentDay, actual: currentGas, target: 75 }].slice(-7)
-        };
-      });
-    };
-
-    updateGraph();
-    const interval = setInterval(updateGraph, 20000);
-    
     return () => clearInterval(interval);
   }, []);
 
@@ -155,14 +126,14 @@ const Dashboard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <StatusRow name="Slurry pump" status={data.sl_02} alarm={data.al_02} />
+                  <StatusRow name="Slurry pump" status={data.si_02} alarm={data.al_02} />
                   <StatusRow name="St - pump stirrer" status={data.si_03} alarm={data.al_03} />
                   <StatusRow name="Feeding pump" status={data.si_02} alarm={data.al_02} />
                   <StatusRow name="Digestate pump" status={data.si_07} alarm={data.al_07} />
                   <StatusRow name="S-Recycle pump" status={data.si_06} alarm={data.al_06} />
                   <StatusRow name="Chiller pump 1" status={data.cc1} alarm={data.cc1} />
                   <StatusRow name="Chiller pump 2" status={data.cc2} alarm={data.cc2} />
-                  <StatusRow name="Chiller pump 3" status={data.cc3} alarm={data.cc3} />
+                  <StatusRow name="Chiller pump 3" status={data.ch1} alarm={data.ch1} />
                 </tbody>
               </table>
             </div>
@@ -183,21 +154,21 @@ const Dashboard = () => {
             label="Energy Output" 
             value={data.energy_output} 
             unit="kWh" 
-            trend={3.2} 
+            trend={weeklyChange.ENERGY_OUTPUT} 
             icon="energy" 
           />
           <PerformanceCard 
             label="Gas Production" 
             value={data.gas_production} 
             unit="m³/h" 
-            trend={-1.5} 
+            trend={weeklyChange.GAS_PRODUCTION} 
             icon="production" 
           />
           <PerformanceCard 
             label="Substrate Feeding Rate" 
             value={data.substrate_feeding_rate ? Number(data.substrate_feeding_rate).toFixed(3) : undefined} 
             unit="tons/h" 
-            trend={0.8} 
+            trend={weeklyChange.SUBSTRATE_FEEDING_RATE} 
             icon="feeding" 
           />
         </div>
