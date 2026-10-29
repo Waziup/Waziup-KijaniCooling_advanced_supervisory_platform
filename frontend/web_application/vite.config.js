@@ -9,4 +9,10 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  server: {
+    proxy: {
+      // Same path as nginx in the Docker image: forward API calls to the local backend
+      '/kijanicooling/api': 'http://localhost:5000',
+    },
+  },
 })

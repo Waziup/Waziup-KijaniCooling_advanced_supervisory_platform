@@ -12,6 +12,8 @@ services:
       - WAZIGATE_URL=http://host.docker.internal:80
     extra_hosts:
       - "host.docker.internal:host-gateway" # Resolve host.docker.internal to host IP
+    ports:
+      - "5000:5000" # API (util_api)
     networks:
       - kijanicooling
     labels:
@@ -21,15 +23,10 @@ services:
     build:
       context: ./frontend/web_application
       dockerfile: Dockerfile
-      args:
-        #VITE_WAZIGATE_API_URL: "http://localhost" # When running on a WaziGate
-        VITE_WAZIGATE_API_URL: "http://wazigate-dashboard.staging.waziup.io/" # For staging Web UI
     image: waziup/kijanicooling-frontend:latest
     container_name: waziup.kijanicooling-frontend
     ports:
-      - "5174:5174"
-    environment:
-      - VITE_API_URL=http://backend:5000
+      - "5174:5174" # nginx: web app + /kijanicooling/api/ proxied to backend:5000
     depends_on:
       - backend
     networks:

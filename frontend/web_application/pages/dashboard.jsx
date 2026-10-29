@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import PerformanceCard from "../src/components/dashboard/PerformanceCard";
 import PerformanceTrendGraphs from "../src/components/dashboard/PerformanceTrendGraphs"; 
-import { SYSTEM_CONFIG } from "../src/utils/sensorMapping";
 import { usePageLayout } from "../src/components/layout/usePageLayout";
 
-const WAZIGATE_URL = import.meta.env.VITE_WAZIGATE_API_URL || 'http://127.0.0.1';
+// The backend reads the values from WaziGate (it holds the WaziGate auth token).
+// Same origin by default: nginx (and the Vite dev server) proxy /kijanicooling/api/ to the backend.
+const DASHBOARD_API_URL = `${(import.meta.env.VITE_BACKEND_API_URL || "").replace(/\/+$/, "")}/kijanicooling/api/v1/dashboard-biodigester`;
 
 const Dashboard = () => {
   const [data, setData] = useState({});
@@ -20,56 +21,24 @@ const Dashboard = () => {
     dataRef.current = data;
   }, [data]);
 
-  // EFFECT 1: Fetch live instantaneous data from WaziGate every 2 seconds
+  // EFFECT 1: Fetch live instantaneous data from the backend every 2 seconds
   useEffect(() => {
     const fetchAllSensors = async () => {
       try {
-        const devicesRes = await fetch(`${WAZIGATE_URL}/devices`, { cache: "no-store" });
-        if (!devicesRes.ok) return;
-        const devicesList = await devicesRes.json();
-
-        const waziMap = {};
-        devicesList.forEach((device) => {
-          const sensorNameMap = {};
-          if (Array.isArray(device.sensors)) {
-            device.sensors.forEach((sensor) => {
-              sensorNameMap[sensor.name] = sensor.id; 
-            });
-          }
-          waziMap[device.name] = { 
-            id: device.id, 
-            sensors: sensorNameMap 
-          };
-        });
-
-        const updates = {};
-        const timestamp = new Date().getTime();
-        const fetchPromises = [];
-
-        for (const [sysDevName, sysDevConfig] of Object.entries(SYSTEM_CONFIG)) {
-          const waziDevice = waziMap[sysDevName];
-          if (waziDevice) {
-            sysDevConfig.sensors.forEach((sensorKeyName) => {
-              const actualSensorId = waziDevice.sensors[sensorKeyName];
-              if (actualSensorId) {
-                const url = `${WAZIGATE_URL}/devices/${waziDevice.id}/sensors/${actualSensorId}/value?t=${timestamp}`;
-                
-                fetchPromises.push(
-                  fetch(url, { cache: "no-store" })
-                    .then((res) => (res.ok ? res.text() : null))
-                    .then((text) => {
-                      if (text !== null) {
-                        updates[sensorKeyName] = text.trim();
-                      }
-                    })
-                    .catch(() => { /* Fail silently */ })
-                );
-              }
-            });
-          }
+        const res = await fetch(DASHBOARD_API_URL, { cache: "no-store" });
+        if (!res.ok) {
+          console.error(`Dashboard Sync Error: ${DASHBOARD_API_URL} returned ${res.status}`);
+          return;
         }
+        const values = await res.json();
 
-        await Promise.all(fetchPromises);
+        // API keys are uppercase (e.g. LIT_06), dashboard keys lowercase (e.g. lit_06).
+        // Keep the last known value of sensors that have none yet
+        const updates = Object.fromEntries(
+          Object.entries(values)
+            .filter(([, value]) => value !== null && value !== undefined)
+            .map(([key, value]) => [key.toLowerCase(), value])
+        );
 
         if (Object.keys(updates).length > 0) {
           setData((prev) => ({ ...prev, ...updates }));

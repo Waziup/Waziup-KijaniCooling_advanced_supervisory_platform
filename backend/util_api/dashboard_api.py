@@ -14,6 +14,7 @@ dashboard_api = Blueprint("dashboard_api", __name__, url_prefix="/kijanicooling/
 
 def get_device_sensor_values(device_name, sensor_keys):
     # Look up the WaziGate IDs in the config file, then read the latest sensor values from WaziGate
+    # Returns {sensor_key: value}
     data = wazigate_EdgeAPI_util.load_json()
     device = data.get("devices", {}).get(device_name, {})
     device_id = device.get("device_id")
@@ -23,16 +24,18 @@ def get_device_sensor_values(device_name, sensor_keys):
     wazigate_device = wazigate_EdgeAPI_util.get_device(device_id)
     wazigate_values = {s.get("id"): s.get("value") for s in wazigate_device.get("sensors") or []}
 
+    sensors = device.get("sensors", {})
     values = {}
     for sensor_key in sensor_keys:
-        sensor_id = device.get("sensors", {}).get(sensor_key, {}).get("wazigate_id")
-        values[sensor_key.upper()] = wazigate_values.get(sensor_id) if sensor_id else None
+        sensor_id = sensors.get(sensor_key, {}).get("wazigate_id")
+        values[sensor_key] = wazigate_values.get(sensor_id) if sensor_id else None
     return values
 
 @dashboard_api.route("/dashboard-biodigester", methods=["GET"])
 def get_dashboard_biodigester():
     try:
-        return jsonify(get_device_sensor_values(BIODIGESTER_DEVICE_NAME, BIODIGESTER_DASHBOARD_SENSORS))
+        values = get_device_sensor_values(BIODIGESTER_DEVICE_NAME, BIODIGESTER_DASHBOARD_SENSORS)
+        return jsonify({key.upper(): value for key, value in values.items()})
     except Exception as e:
         print(f"[DASHBOARD API] Error reading biodigester values: {e}")
         return jsonify({"error": "Failed to read biodigester values from WaziGate"}), 502

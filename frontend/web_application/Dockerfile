@@ -2,10 +2,6 @@ FROM node:20-alpine as builder
 
 WORKDIR /app
 
-# Allow passing the WaziGate URL at build time so Vite can embed it.
-ARG VITE_WAZIGATE_API_URL
-ENV VITE_WAZIGATE_API_URL=${VITE_WAZIGATE_API_URL}
-
 # Copy package files
 COPY package.json package-lock.json ./
 
@@ -18,17 +14,12 @@ COPY . .
 # Build the app
 RUN npm run build
 
-# Production image
-FROM node:20-alpine
+# Production image: nginx serves the built app and proxies /kijanicooling/api/ to the backend
+FROM nginx:alpine
 
-WORKDIR /app
-
-# Install serve to run the built app
-RUN npm install -g serve
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy built files from builder
-COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/dist /usr/share/nginx/html
 
 EXPOSE 5174
-
-CMD ["serve", "-s", "dist", "-l", "5174"]
