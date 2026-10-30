@@ -147,7 +147,7 @@ const Dashboard = () => {
         {/* Pumps Status: Aligned Width 888px from xl, full width below */}
         <div className="w-full min-w-0 xl:flex-1 xl:max-w-[888px] xl:h-[424px]">
           <div className="w-full h-full bg-white rounded-xl border border-green-300 p-5 shadow-sm flex flex-col">
-            <h3 className="text-[24px] font-bold text-gray-800 mb-4 tracking-tight flex-shrink-0">Pump status</h3>
+            <h3 className="text-[24px] font-bold text-gray-800 mb-4 tracking-tight flex-shrink-0">Pumps status</h3>
             <div className="overflow-x-auto xl:overflow-hidden flex-grow flex flex-col">
               <table className="w-full text-left border-collapse">
                 <thead className="bg-gray-50 font-bold text-black text-[18px]">
@@ -163,9 +163,10 @@ const Dashboard = () => {
                   <StatusRow name="Feeding pump" status={data.si_02} alarm={data.al_02} />
                   <StatusRow name="Digestate pump" status={data.si_07} alarm={data.al_07} />
                   <StatusRow name="S-Recycle pump" status={data.si_06} alarm={data.al_06} />
-                  <StatusRow name="Chiller pump 1" status={data.cc1} alarm={data.cc1} />
-                  <StatusRow name="Chiller pump 2" status={data.cc2} alarm={data.cc2} />
-                  <StatusRow name="Chiller pump 3" status={data.ch1} alarm={data.ch1} />
+                  {/* Chiller pumps have no alarm signal: the indicator follows the pump status */}
+                  <StatusRow name="Chiller pump 1" status={data.cc1} />
+                  <StatusRow name="Chiller pump 2" status={data.cc2} />
+                  <StatusRow name="Chiller pump 3" status={data.ch1} />
                 </tbody>
               </table>
             </div>

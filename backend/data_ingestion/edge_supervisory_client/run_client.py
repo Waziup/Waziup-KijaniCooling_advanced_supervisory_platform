@@ -24,11 +24,12 @@ def read_registers(start, count):
     return values if values else [0]*count
 
 def get_chiller_data():
-    vals = read_registers(0, 22)
+    vals = read_registers(0, 23)
     keys = [
         "vg1","vh1","vc1","vc2","pc1","pg1","tg1",
         "th1","th2","th3","th4",
-        "tc1","tc2","tc3","tc4","tc5","tc6","tc7","tc8","tc9"
+        "tc1","tc2","tc3","tc4","tc5","tc6","tc7","tc8","tc9",
+        "ch1","cc1","cc2"
     ]
     if show_debug_print: print(f"[CLIENT] Chiller unit data: {dict(zip(keys, vals))}")
     return dict(zip(keys, vals))

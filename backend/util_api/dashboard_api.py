@@ -26,7 +26,7 @@ DASHBOARD_SENSORS = {
         "si_07", "al_07",                                       # digestate pump status and alarm
         "si_06", "al_06"                                        # substrate recycling pump status and alarm
     ],
-    CHILLER_DEVICE_NAME: ["vg1", "th1", "th2", "vc1", "pg1", "cc1", "cc2"],
+    CHILLER_DEVICE_NAME: ["vg1", "th1", "th2", "vc1", "pg1", "cc1", "cc2", "ch1"],
     METRICS_DEVICE_NAME: ["energy_output", "gas_production", "substrate_feeding_rate"]
 }
 
