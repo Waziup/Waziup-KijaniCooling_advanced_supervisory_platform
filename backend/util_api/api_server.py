@@ -6,7 +6,7 @@ Registers all API services and serves them with Flask.
 from flask import Flask
 
 from util_api.config_api import config_api
-from util_api.dashboard_api import dashboard_api
+from util_api.dashboard_api import dashboard_api, preload_history
 
 API_HOST = "0.0.0.0"
 API_PORT = 5000
@@ -20,4 +20,5 @@ def create_app():
 
 def run_api_server(host=API_HOST, port=API_PORT):
     print(f"[API] Serving on {host}:{port}")
+    preload_history() # fill the dashboard graph caches so the first page load is fast
     create_app().run(host=host, port=port, use_reloader=False)

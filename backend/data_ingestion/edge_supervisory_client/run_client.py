@@ -15,7 +15,7 @@ client = ModbusClient(host = "127.0.0.1", port=12345)
 base_path = os.path.dirname(os.path.abspath(__file__))
 WAZIGATE_CONFIG_FILE = os.path.join(base_path, "..", "config", "asb_wazigate_config.json")
 
-CLIENT_POLL_INTERVAL = 18  # in seconds, smaller than PLANT_UPDATE_INTERVAL
+CLIENT_POLL_INTERVAL = 300  # in seconds, smaller than PLANT_UPDATE_INTERVAL
 
 show_debug_print = True
 

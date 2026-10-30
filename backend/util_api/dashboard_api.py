@@ -10,6 +10,7 @@ from datetime import date, datetime, timedelta, timezone
 from flask import Blueprint, jsonify
 
 from data_ingestion.wazigate import wazigate_EdgeAPI_util
+from util_api.history_cache import HourlySensorHistory
 
 BIODIGESTER_DEVICE_NAME = "KijaniCooling ASB-biodigester"
 CHILLER_DEVICE_NAME = "KijaniCooling ASB-chiller"
@@ -34,6 +35,14 @@ WEEKLY_METRICS = ["energy_output", "gas_production", "substrate_feeding_rate"]
 WEEKLY_TRENDS_REFRESH_INTERVAL = 600 # in seconds; reading 2 weeks of history is too heavy for every dashboard poll
 
 dashboard_api = Blueprint("dashboard_api", __name__, url_prefix="/kijanicooling/api/v1")
+
+# Hourly averages over the last 7 days for the dashboard graphs
+energy_output_history = HourlySensorHistory(METRICS_DEVICE_NAME, "energy_output")
+gas_production_history = HourlySensorHistory(METRICS_DEVICE_NAME, "gas_production")
+
+def preload_history():
+    energy_output_history.preload()
+    gas_production_history.preload()
 
 _weekly_cache = {"data": None, "updated": 0}
 _weekly_lock = threading.Lock()
@@ -156,3 +165,18 @@ def get_dashboard_biodigester():
     values["WEEKLY_CHANGE"] = weekly["change"]
     values["WEEKLY_TRENDS"] = weekly["trends"]
     return jsonify(values)
+
+@dashboard_api.route("/dashboard-energy-output-history", methods=["GET"])
+def get_dashboard_energy_output_history():
+    # Hourly energy output (kWh) over the last 7 days
+    return jsonify({"values": energy_output_history.get()})
+
+@dashboard_api.route("/dashboard-biogas-production", methods=["GET"])
+def get_dashboard_biogas_production():
+    # Hourly gas production (m3/h) over the last 7 days, with the target gas production
+    try:
+        target = wazigate_EdgeAPI_util.load_json().get("gas_production_target")
+    except Exception as e:
+        print(f"[DASHBOARD API] Error loading config: {e}")
+        target = None
+    return jsonify({"target": target, "values": gas_production_history.get()})

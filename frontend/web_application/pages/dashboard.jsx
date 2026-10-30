@@ -1,25 +1,56 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import PerformanceCard from "../src/components/dashboard/PerformanceCard";
 import PerformanceTrendGraphs from "../src/components/dashboard/PerformanceTrendGraphs"; 
 import { usePageLayout } from "../src/components/layout/usePageLayout";
 
 // The backend reads the values from WaziGate (it holds the WaziGate auth token).
 // Same origin by default: nginx (and the Vite dev server) proxy /kijanicooling/api/ to the backend.
-const DASHBOARD_API_URL = `${(import.meta.env.VITE_BACKEND_API_URL || "").replace(/\/+$/, "")}/kijanicooling/api/v1/dashboard-biodigester`;
+const API_BASE_URL = `${(import.meta.env.VITE_BACKEND_API_URL || "").replace(/\/+$/, "")}/kijanicooling/api/v1`;
+const DASHBOARD_API_URL = `${API_BASE_URL}/dashboard-biodigester`;
+const ENERGY_HISTORY_API_URL = `${API_BASE_URL}/dashboard-energy-output-history`;
+const BIOGAS_HISTORY_API_URL = `${API_BASE_URL}/dashboard-biogas-production`;
+const GRAPHS_REFRESH_INTERVAL = 5 * 60 * 1000; // hourly values: refreshing every 5 minutes is enough
+
+// Last graph data, kept while navigating between pages so the graphs show immediately on return
+let cachedGraphs = null;
+
+const fetchJson = async (url) => {
+  const res = await fetch(url, { cache: "no-store" });
+  if (!res.ok) throw new Error(`${url} returned ${res.status}`);
+  return res.json();
+};
 
 const Dashboard = () => {
   const [data, setData] = useState({});
+  const [liveLoaded, setLiveLoaded] = useState(false);
+  const [graphs, setGraphs] = useState(cachedGraphs); // null while loading
 
-  // Weekly trends (daily averages of the last 7 days) and gas production target come from the API
-  const historicalData = useMemo(() => {
-    const trends = data.weekly_trends || [];
-    const target = data.gas_production_target ?? null;
-    return {
-      energy: trends.map((d) => ({ timeLabel: d.day, output: d.ENERGY_OUTPUT })),
-      gas: trends.map((d) => ({ timeLabel: d.day, actual: d.GAS_PRODUCTION, target }))
-    };
-  }, [data.weekly_trends, data.gas_production_target]);
   const weeklyChange = data.weekly_change || {};
+
+  // Graphs: hourly values over the last 7 days, loaded once the live data is displayed
+  useEffect(() => {
+    if (!liveLoaded) return;
+    const fetchGraphs = async () => {
+      try {
+        const [energy, biogas] = await Promise.all([
+          fetchJson(ENERGY_HISTORY_API_URL),
+          fetchJson(BIOGAS_HISTORY_API_URL)
+        ]);
+        cachedGraphs = {
+          energy: energy.values.map((p) => ({ time: p.time, output: p.value })),
+          gas: biogas.values.map((p) => ({ time: p.time, actual: p.value, target: biogas.target }))
+        };
+        setGraphs(cachedGraphs);
+      } catch (e) {
+        console.error("Dashboard Sync Error: Failed to fetch graph data.", e);
+        setGraphs((prev) => prev || { energy: [], gas: [] }); // stop showing "loading"
+      }
+    };
+
+    fetchGraphs();
+    const interval = setInterval(fetchGraphs, GRAPHS_REFRESH_INTERVAL);
+    return () => clearInterval(interval);
+  }, [liveLoaded]);
 
   // Fetch live data from the backend every 2 seconds
   useEffect(() => {
@@ -43,6 +74,7 @@ const Dashboard = () => {
         if (Object.keys(updates).length > 0) {
           setData((prev) => ({ ...prev, ...updates }));
         }
+        setLiveLoaded(true);
       } catch (e) {
         console.error("Dashboard Sync Error: Failed to fetch sensor data mapping.", e);
       }
@@ -81,8 +113,8 @@ const Dashboard = () => {
               </div>
               <div className="flex flex-col flex-grow justify-start gap-1 mt-2.5">
                 <MetricRow label="Biogas pressure" value={data.pi_06_3} unit="mbar" />
-                <MetricRow label="Substrate Temp" value={data.ti_06_1} unit="°C" />
-                <MetricRow label="Biogas Temp" value={data.ti_06_4} unit="°C" />
+                <MetricRow label="Substrate temperature" value={data.ti_06_1} unit="°C" />
+                <MetricRow label="Biogas temperature" value={data.ti_06_4} unit="°C" />
                 <MetricRow label="Biomass level" value={data.lit_06} unit="% full" />
                 <MetricRow label="Substrate flowrate" value={data.fit_04} unit="Kg/h" />
               </div>
@@ -112,7 +144,7 @@ const Dashboard = () => {
 
         </div>
 
-        {/* Pump Status: Aligned Width 888px from xl, full width below */}
+        {/* Pumps Status: Aligned Width 888px from xl, full width below */}
         <div className="w-full min-w-0 xl:flex-1 xl:max-w-[888px] xl:h-[424px]">
           <div className="w-full h-full bg-white rounded-xl border border-green-300 p-5 shadow-sm flex flex-col">
             <h3 className="text-[24px] font-bold text-gray-800 mb-4 tracking-tight flex-shrink-0">Pump status</h3>
@@ -179,8 +211,9 @@ const Dashboard = () => {
             Weekly Performance Trends
           </h2>
           <PerformanceTrendGraphs 
-            energyData={historicalData.energy} 
-            gasData={historicalData.gas} 
+            energyData={graphs?.energy}
+            gasData={graphs?.gas}
+            loading={!graphs}
           />
         </div>
         
